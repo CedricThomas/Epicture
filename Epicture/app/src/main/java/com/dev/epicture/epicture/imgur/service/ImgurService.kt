@@ -4,26 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.content.ContextCompat.startActivity
+import com.dev.epicture.epicture.imgur.service.models.BasicImgurResponseModel
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
-import com.dev.epicture.epicture.imgur.service.models.ImgurFullResponseModel
-import com.dev.epicture.epicture.imgur.service.models.ImgurResponseModel
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import java.io.IOException
-import com.google.gson.reflect.TypeToken
 
 
+object ImgurService {
 
+    private val clientId: String = Config.clientID
+    private val clientSecret: String = Config.clientSecret
 
-class ImgurService(val clientId: String, val clientSecret: String) {
-
-    
     private val host = "api.imgur.com"
     private val apiVersion = "3"
 
     private val informations : HashMap<String, String> = HashMap()
     private val client: OkHttpClient = OkHttpClient.Builder().build()
-
 
     fun authorize(context: Context) {
         val url = "https://api.imgur.com/oauth2/authorize?client_id=$clientId&response_type=token"
@@ -31,7 +30,7 @@ class ImgurService(val clientId: String, val clientSecret: String) {
         startActivity(context, intent, null)
     }
 
-    fun registerCallbackInformations(intent: Intent) {
+    fun registerCallbackInformations(intent: Intent){
         val queryData = intent.dataString!!.split('#')[1]
         for (raw in queryData.split("&")) {
             val pair = raw.split("=")
@@ -39,28 +38,23 @@ class ImgurService(val clientId: String, val clientSecret: String) {
         }
     }
 
-    fun getImages(resolve: (ImgurResponseModel<ImageModel>) -> Unit, reject: (Exception) -> Unit) {
-
+    fun getImages(page: Int, resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit) {
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
             .addPathSegment(apiVersion)
             .addPathSegment("account")
-            .addPathSegment("Arzad")
+            .addPathSegment(informations["account_username"]!!)
             .addPathSegment("images")
-            .addPathSegment("0")
+            .addPathSegment(page.toString())
             .build()
 
         val request = GETBuilder(url)
-        val customResolve = { res: ImgurFullResponseModel ->
-            val data = Gson().fromJson<ArrayList<ImageModel>>(res.data, object : TypeToken<ArrayList<ImageModel>>() {}.type)
-            resolve(ImgurResponseModel(
-                data,
-                res.success,
-                res.status
-            ))
+        val customResolve = { res: JsonElement ->
+            val type = object : TypeToken<BasicImgurResponseModel<ArrayList<ImageModel>>>() {}.type
+            val data = Gson().fromJson<BasicImgurResponseModel<ArrayList<ImageModel>>>(res.toString(), type)
+            resolve(data)
         }
-
         asyncLaunch(request!!, customResolve, reject)
     }
 
@@ -74,25 +68,24 @@ class ImgurService(val clientId: String, val clientSecret: String) {
             .build()
     }
 
-    private fun asyncLaunch(request: Request, resolve: (ImgurFullResponseModel) -> Unit, reject: (Exception) -> Unit) {
+    private fun asyncLaunch(request: Request, resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit) {
 
         client.newCall(request).enqueue(object : Callback {
 
             override fun onResponse(call: Call, response: Response) {
                 try {
-                    val type = object : TypeToken<ImgurFullResponseModel>() {}.type
-                    val dataModel = Gson().fromJson<ImgurFullResponseModel>(response.body()!!.string()!!, type)
-                    if (dataModel.success) {
-                        return resolve(dataModel)
-                    }
-                   return reject(java.lang.Exception("Invalid response"))
+                    val data = Gson().fromJson<JsonElement>(response.body()!!.string()!!, JsonElement::class.java)
+                    val dataModel = data.asJsonObject
+                    if (dataModel.get("success").asBoolean)
+                        return resolve(data)
+                    return reject(java.lang.Exception("Invalid response"))
                 } catch (e: Exception) {
                     return reject(e)
                 }
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                reject(e)
+                return reject(e)
             }
 
         })
