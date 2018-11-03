@@ -1,12 +1,13 @@
-package com.dev.epicture.epicture
+package com.dev.epicture.epicture.home.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dev.epicture.epicture.R
 
-class FavoriteGalleryFragment : Fragment() {
+class FavoritesFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

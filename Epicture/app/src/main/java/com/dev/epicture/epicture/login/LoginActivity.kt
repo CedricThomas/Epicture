@@ -1,10 +1,14 @@
-package com.dev.epicture.epicture
+package com.dev.epicture.epicture.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import com.dev.epicture.epicture.R
+import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.ImgurService
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 
 class LoginActivity : AppCompatActivity() {
 
@@ -12,7 +16,10 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // Create global configuration and initialize ImageLoader with this config
+        val config = ImageLoaderConfiguration.Builder(this).build()
+        ImageLoader.getInstance().init(config)
+        setContentView(R.layout.activity_login)
         button = findViewById(R.id.button)
         button?.setOnClickListener {
             ImgurService.authorize(this)
@@ -24,8 +31,9 @@ class LoginActivity : AppCompatActivity() {
         when (intent?.action) {
             Intent.ACTION_VIEW -> {
                 ImgurService.registerCallbackInformations(intent)
-                val newintent = Intent(this, GalleryActivity::class.java)
-                startActivity(newintent)
+                val newIntent = Intent(this, HomeActivity::class.java)
+                startActivity(newIntent)
+                finish()
             }
         }
     }

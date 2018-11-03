@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">EPicture</string>
     <string name="title_activity_gallery">Gallery</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_images">Images</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_upload">Upload</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="GalleryItemDescription">Gallery Item</string>
+    <string name="login">Login</string>
 </resources>
