@@ -29,7 +29,6 @@ object ImgurService {
         val url = "https://api.imgur.com/oauth2/authorize?client_id=$clientId&response_type=token"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(context, intent, null)
-        (context as Activity).finish()
     }
 
     fun registerCallbackInformations(intent: Intent){

@@ -33,6 +33,7 @@ class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val
     }
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
+        Log.i("ImgurService", position.toString())
         ImageLoader.getInstance().displayImage(images[position].link, holder.imageView)
     }
 

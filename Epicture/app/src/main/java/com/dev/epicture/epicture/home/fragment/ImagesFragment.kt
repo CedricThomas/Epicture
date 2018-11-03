@@ -3,6 +3,7 @@ package com.dev.epicture.epicture.home.fragment
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +27,7 @@ class ImagesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
         val recyclingView = view.findViewById<RecyclerView>(R.id.recyclingView)
-        recyclingView?.layoutManager = GridLayoutManager(activity, 3)
+        recyclingView?.layoutManager = LinearLayoutManager(activity)
         recyclingView?.adapter = GalleryItemAdapter(images, context!!)
 
         loadImages(recyclingView)
