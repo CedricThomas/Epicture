@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,7 @@ class ImagesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
         val recyclingView = view.findViewById<RecyclerView>(R.id.recyclingView)
-        recyclingView?.layoutManager = LinearLayoutManager(activity)
+        recyclingView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclingView?.adapter = GalleryItemAdapter(images, context!!)
 
         loadImages(recyclingView)
@@ -43,10 +44,10 @@ class ImagesFragment : Fragment() {
                 recyclerView.adapter?.notifyDataSetChanged()
 
             } catch (e : Exception) {
-                Log.i("ImgurService", e.message)
+                Log.i("LoadImages", e.message)
             }
         }, {e ->
-            Log.i("ImgurService", e.message)
+            Log.i("LoadImages", e.message)
         })
     }
 }

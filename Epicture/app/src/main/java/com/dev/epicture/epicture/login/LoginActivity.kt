@@ -10,6 +10,13 @@ import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
+import com.nostra13.universalimageloader.core.assist.ImageScaleType
+import com.nostra13.universalimageloader.core.DisplayImageOptions
+
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,7 +25,14 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Create global configuration and initialize ImageLoader with this config
-        val config = ImageLoaderConfiguration.Builder(this).build()
+
+        val defaultOptions = DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .build()
+        val config = ImageLoaderConfiguration.Builder(applicationContext)
+            .defaultDisplayImageOptions(defaultOptions)
+            .build()
         ImageLoader.getInstance().init(config)
         setContentView(R.layout.activity_login)
         button = findViewById(R.id.button)
