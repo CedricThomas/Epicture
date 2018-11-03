@@ -1,5 +1,6 @@
 package com.dev.epicture.epicture.imgur.service
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,7 @@ object ImgurService {
         val url = "https://api.imgur.com/oauth2/authorize?client_id=$clientId&response_type=token"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(context, intent, null)
+        (context as Activity).finish()
     }
 
     fun registerCallbackInformations(intent: Intent){
