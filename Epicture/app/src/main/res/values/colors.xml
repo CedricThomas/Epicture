@@ -2,8 +2,10 @@
 <resources>
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#ffffffff</color>
-    <color name="colorPrimary">#007585</color>
-    <color name="colorPrimaryDark">#016876</color>
+
+    <color name="colorSecondary">#ffffffff</color>
+    <color name="colorPrimary">#313333</color>
+    <color name="colorPrimaryDark">#313333</color>
     <color name="colorAccent">#eb823c</color>
     <color name="colorAccentTransparent">#afeb823c</color>
 </resources>

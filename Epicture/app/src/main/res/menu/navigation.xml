@@ -3,17 +3,17 @@
 
     <item
             android:id="@+id/navigation_images"
-            android:icon="@drawable/ic_images"
+            android:icon="@drawable/ic_images_primary"
             android:title="@string/title_images"/>
 
     <item
             android:id="@+id/navigation_search"
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_search_primary"
             android:title="@string/title_search"/>
 
     <item
             android:id="@+id/navigation_upload"
-            android:icon="@drawable/ic_upload"
+            android:icon="@drawable/ic_upload_primary"
             android:title="@string/title_upload"/>
 
 </menu>
