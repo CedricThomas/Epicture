@@ -39,7 +39,7 @@ object ImgurService {
         }
     }
 
-    fun getImages(page: Int, resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit) {
+    fun getImages(resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -47,7 +47,7 @@ object ImgurService {
             .addPathSegment("account")
             .addPathSegment(informations["account_username"]!!)
             .addPathSegment("images")
-            .addPathSegment(page.toString())
+            .addPathSegment(page)
             .build()
 
         val request = GETBuilder(url)

@@ -3,41 +3,30 @@ package com.dev.epicture.epicture.login
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
+import android.support.v7.widget.CardView
+import android.view.animation.Animation
+import android.view.animation.BounceInterpolator
+import android.view.animation.ScaleAnimation
 import android.widget.Button
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.ImgurService
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
-import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
-import com.nostra13.universalimageloader.core.assist.ImageScaleType
-import com.nostra13.universalimageloader.core.DisplayImageOptions
-
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private var button : Button? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Create global configuration and initialize ImageLoader with this config
-
-        val defaultOptions = DisplayImageOptions.Builder()
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .build()
-        val config = ImageLoaderConfiguration.Builder(applicationContext)
-            .defaultDisplayImageOptions(defaultOptions)
-            .build()
-        ImageLoader.getInstance().init(config)
         setContentView(R.layout.activity_login)
-        button = findViewById(R.id.button)
+        val button = findViewById<Button>(R.id.button)
+        val card = findViewById<CardView>(R.id.card)
         button?.setOnClickListener {
             ImgurService.authorize(this)
+            val scaleAnimation = ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f)
+            scaleAnimation.duration = 500
+            val bounceInterpolator = BounceInterpolator()
+            scaleAnimation.interpolator = bounceInterpolator
+            card.startAnimation(scaleAnimation)
         }
     }
 
