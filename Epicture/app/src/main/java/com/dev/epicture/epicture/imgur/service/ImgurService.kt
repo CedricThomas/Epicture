@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.content.ContextCompat.startActivity
+import android.util.Log
 import com.dev.epicture.epicture.imgur.service.models.BasicImgurResponseModel
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import com.google.gson.Gson
@@ -59,6 +60,19 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
+    fun deleteImage(resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit, id: String) {
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("image")
+            .addPathSegment(id)
+            .build()
+
+        val request = DELETEBuilder(url)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
     private fun GETBuilder(url: HttpUrl): Request? {
         return Request.Builder()
             .url(url)
@@ -66,6 +80,16 @@ object ImgurService {
             .header("Authorization", "Bearer ${informations["access_token"]}")
             .header("User-Agent", "Epicture")
             .get()
+            .build()
+    }
+
+    private fun DELETEBuilder(url: HttpUrl): Request? {
+        return Request.Builder()
+            .url(url)
+            .header("Authorization", "Client-ID $clientId")
+            .header("Authorization", "Bearer ${informations["access_token"]}")
+            .header("User-Agent", "Epicture")
+            .delete()
             .build()
     }
 

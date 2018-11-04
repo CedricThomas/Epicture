@@ -17,6 +17,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.HomeActivity
+import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.imgur.service.GlideApp
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import kotlinx.android.synthetic.main.recycler_view_item.view.*
@@ -25,6 +26,11 @@ import kotlinx.android.synthetic.main.recycler_view_item.view.*
 class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity) : RecyclerView.Adapter<GalleryItemAdapter.ImageHolder>() {
 
     var selecting = false
+    var mRecyclerView: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        mRecyclerView = recyclerView
+    }
 
     inner class ImageHolder (view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.imageView
@@ -39,6 +45,10 @@ class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val
                 return@setOnMenuItemClickListener true
             selecting = false
             activity.actionMenu?.findItem(R.id.action_delete)?.isVisible = false
+            (activity.supportFragmentManager.findFragmentById(R.id.contentFragment) as ImagesFragment).deleteSelectedImages(mRecyclerView!!, images)
+            images.filter { it ->
+                !it.selected
+            }
             notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }

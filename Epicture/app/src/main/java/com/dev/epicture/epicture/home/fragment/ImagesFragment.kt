@@ -18,7 +18,6 @@ class ImagesFragment : Fragment() {
 
     private val images: ArrayList<ImageModel> = ArrayList()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,5 +49,30 @@ class ImagesFragment : Fragment() {
             Log.i("LoadImages", e.message)
         }, page.toString())
     }
+
+    fun deleteSelectedImages(recyclerView: RecyclerView, images: ArrayList<ImageModel>) {
+        val selected = images.filter { it ->
+                        it.selected
+        }
+        var size = selected.size
+        val countDown = {
+            size -= 1
+            if (size == 0) {
+                images.clear()
+                loadImages(recyclerView, 0)
+            }
+        }
+        for (image in selected) {
+            ImgurService.deleteImage({ resp ->
+                Log.i("DeleteSelectedImages", resp.asString)
+                countDown()
+            }, {resp ->
+                Log.i("DeleteSelectedImages", resp.message)
+                countDown()
+            }, image.id!!)
+        }
+
+    }
+
 }
 
