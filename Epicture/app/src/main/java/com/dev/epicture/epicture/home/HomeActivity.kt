@@ -22,6 +22,7 @@ class HomeActivity : AppCompatActivity() {
         actionMenu?.findItem(R.id.action_refresh)?.isVisible = false
         actionMenu?.findItem(R.id.action_favorite)?.isVisible = false
         actionMenu?.findItem(R.id.action_delete)?.isVisible = false
+        actionMenu?.findItem(R.id.action_cancel)?.isVisible = false
 
         val t = supportFragmentManager.beginTransaction()
         t.replace(R.id.contentFragment, fragment)

@@ -23,7 +23,7 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import kotlinx.android.synthetic.main.recycler_view_item.view.*
 
 
-class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity) : RecyclerView.Adapter<GalleryItemAdapter.ImageHolder>() {
+class GalleryItemAdapter(private var images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity) : RecyclerView.Adapter<GalleryItemAdapter.ImageHolder>() {
 
     var selecting = false
     var mRecyclerView: RecyclerView? = null
@@ -44,15 +44,28 @@ class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val
             if (!selecting)
                 return@setOnMenuItemClickListener true
             selecting = false
-            activity.actionMenu?.findItem(R.id.action_delete)?.isVisible = false
+            setActionsVisibility(false)
             (activity.supportFragmentManager.findFragmentById(R.id.contentFragment) as ImagesFragment).deleteSelectedImages(mRecyclerView!!, images)
-            images.filter { it ->
+            images = ArrayList(images.filter { it ->
                 !it.selected
-            }
+            })
             notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
 
+        activity.actionMenu?.findItem(R.id.action_cancel)?.setOnMenuItemClickListener { _ ->
+            if (!selecting)
+                return@setOnMenuItemClickListener true
+            selecting = false
+            setActionsVisibility(false)
+            notifyDataSetChanged()
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    private fun setActionsVisibility(status: Boolean) {
+        (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.isVisible = status
+        activity.actionMenu?.findItem(R.id.action_cancel)?.isVisible = status
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ImageHolder {
@@ -73,7 +86,7 @@ class GalleryItemAdapter(private val images : ArrayList<ImageModel>, private val
             if (!selecting) {
                 images[position].selected = true
                 selecting = true
-                (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.isVisible = true
+                setActionsVisibility(true)
                 notifyDataSetChanged()
             }
             return@setOnLongClickListener true

@@ -18,6 +18,15 @@ class ImagesFragment : Fragment() {
 
     private val images: ArrayList<ImageModel> = ArrayList()
 
+    private fun activateReload(recyclingView: RecyclerView) {
+        // Reload activation
+        (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.isVisible = true
+        (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.setOnMenuItemClickListener {
+            loadImages(recyclingView, 0)
+            return@setOnMenuItemClickListener true
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,9 +34,12 @@ class ImagesFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
+
         val recyclingView = view.findViewById<RecyclerView>(R.id.recyclingView)
         recyclingView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclingView?.adapter = GalleryItemAdapter(images, context!!, activity!!)
+
+        activateReload(recyclingView)
 
         loadImages(recyclingView, 0)
 
