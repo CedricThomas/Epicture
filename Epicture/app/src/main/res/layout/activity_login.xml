@@ -38,7 +38,7 @@
 
             <Button
                     android:id="@+id/button"
-                    android:text="@string/login"
+                    android:text="@string/action_login"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorTransparent"

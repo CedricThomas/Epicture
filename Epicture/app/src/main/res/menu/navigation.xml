@@ -7,6 +7,12 @@
             android:title="@string/title_images"/>
 
     <item
+            android:id="@+id/navigation_favorite"
+            android:icon="@drawable/ic_favorite_border_primary"
+            android:title="@string/title_favorites"/>
+
+
+    <item
             android:id="@+id/navigation_search"
             android:icon="@drawable/ic_search_primary"
             android:title="@string/title_search"/>

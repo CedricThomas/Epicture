@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- "Mark Favorite", should appear as action button if possible -->
+
+    <item
+            android:id="@+id/action_delete"
+            android:icon="@drawable/ic_delete_primary"
+            android:title="@string/action_delete"
+            app:showAsAction="always"/>
+
+    <item
+            android:id="@+id/action_refresh"
+            android:icon="@drawable/ic_refresh_primary"
+            android:title="@string/action_refresh"
+            app:showAsAction="ifRoom"/>
+
     <item
             android:id="@+id/action_favorite"
             android:icon="@drawable/ic_favorite_border_primary"
-            android:title="favorite"
+            android:title="@string/action_favorite"
             app:showAsAction="ifRoom"/>
 
-    <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_settings"
-          android:title="Menu"
-          app:showAsAction="never"/>
-
 </menu>
-

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.Adapter.GalleryItemAdapter
+import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 
@@ -27,14 +28,14 @@ class ImagesFragment : Fragment() {
 
         val recyclingView = view.findViewById<RecyclerView>(R.id.recyclingView)
         recyclingView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        recyclingView?.adapter = GalleryItemAdapter(images, context!!)
+        recyclingView?.adapter = GalleryItemAdapter(images, context!!, activity!!)
 
         loadImages(recyclingView, 0)
 
         return view
     }
 
-    fun loadImages(recyclerView: RecyclerView, page: Int) {
+    private fun loadImages(recyclerView: RecyclerView, page: Int) {
         ImgurService.getImages({ resp ->
             try {
                 for (image in resp.data)
