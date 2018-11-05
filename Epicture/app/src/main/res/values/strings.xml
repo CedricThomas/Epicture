@@ -21,5 +21,7 @@
     <string name="titre_upload">Upload</string>
     <string name="choose_image">Choose Image</string>
     <string name="upload">Upload</string>
+    <string name="user_profile">Profile</string>
+    <string name="Logout_button">Logout</string>
 
 </resources>
