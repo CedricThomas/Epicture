@@ -16,17 +16,70 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 
 class ImagesFragment : Fragment() {
 
-    private val images: ArrayList<ImageModel> = ArrayList()
+    private var images: ArrayList<ImageModel> = ArrayList()
+    private var onNewPage: Boolean = false
+    private var page: Int = 0
 
-
-    private fun activateReload(recyclingView: RecyclerView) {
+    private fun activateReload(recyclerView: RecyclerView) {
         // Reload activation
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.isVisible = true
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.setOnMenuItemClickListener {
             images.clear()
-            loadImages(recyclingView, 0)
+            loadActivePages(recyclerView)
             return@setOnMenuItemClickListener true
         }
+    }
+
+    // Delete activation
+    private fun activateDelete(recyclerView: RecyclerView) {
+        (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.setOnMenuItemClickListener {
+            val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
+            val removed = adapter.applySelection()
+            for (elem in removed)
+                images.remove(elem)
+            deleteImages(removed)
+            recyclerView.adapter?.notifyDataSetChanged()
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    // Cancel activation
+    private fun activateCancelSelection(recyclingView: RecyclerView) {
+        (activity as HomeActivity).actionMenu?.findItem(R.id.action_cancel)?.setOnMenuItemClickListener {
+            val adapter = recyclingView.adapter as ImagesFragmentItemAdapter
+            val selected = adapter.applySelection()
+            selected.forEach { image ->
+                image.selected = false
+            }
+            recyclingView.adapter?.notifyDataSetChanged()
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    // Infinite scroll activation
+    private fun activateInfiniteScroll(recyclerView: RecyclerView) {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (!recyclerView.canScrollVertically(1) && !onNewPage) {
+                    val size = images.size
+                    onNewPage = true
+                    loadImagesPage(recyclerView, page + 1) {
+                        if (images.size > size) {
+                            page += 1
+                        }
+                        onNewPage = false
+                    }
+                }
+            }
+        })
+    }
+
+    private fun loadActivePages(recyclerView: RecyclerView) {
+
+        for (i in 0..page + 1)
+            loadImagesPage(recyclerView, i)
+
     }
 
     override fun onCreateView(
@@ -37,20 +90,23 @@ class ImagesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
 
-        val recyclingView = view.findViewById<RecyclerView>(R.id.recyclingView)
-        recyclingView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        recyclingView?.adapter = ImagesFragmentItemAdapter(images, context!!, activity!!)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        recyclerView?.adapter = ImagesFragmentItemAdapter(images, context!!, activity!!)
 
-        activateReload(recyclingView)
+        activateReload(recyclerView)
+        activateDelete(recyclerView)
+        activateCancelSelection(recyclerView)
+        activateInfiniteScroll(recyclerView)
 
-        loadImages(recyclingView, 0)
+        loadActivePages(recyclerView)
 
         return view
     }
 
 
     // add a page in images array and update recycler view
-    private fun loadImages(recyclerView: RecyclerView, page: Int) {
+    private fun loadImagesPage(recyclerView: RecyclerView, page: Int, callback: () -> Unit = {}) {
         ImgurService.getImages({ resp ->
             try {
                 for (image in resp.data)
@@ -61,31 +117,20 @@ class ImagesFragment : Fragment() {
             } catch (e : Exception) {
                 Log.i("LoadImages", e.message)
             }
+            callback()
         }, {e ->
             Log.i("LoadImages", e.message)
+            callback()
         }, page.toString())
     }
 
-    // delete select item in array and reload all the pictures
-    fun deleteSelectedImages(recyclerView: RecyclerView, images: ArrayList<ImageModel>) {
-        val selected = images.filter { it ->
-                        it.selected
-        }
-        var size = selected.size
-        val countDown = {
-            size -= 1
-            if (size == 0) {
-                images.clear()
-                loadImages(recyclerView, 0)
-            }
-        }
-        for (image in selected) {
+    // delete select item from array
+    private fun deleteImages(images: ArrayList<ImageModel>) {
+        for (image in images) {
             ImgurService.deleteImage({ resp ->
                 Log.i("DeleteSelectedImages", resp.asString)
-                countDown()
             }, {resp ->
-                Log.i("DeleteSelectedImages", resp.message)
-                countDown()
+                Log.i("DeleteFailure", resp.message)
             }, image.id!!)
         }
 

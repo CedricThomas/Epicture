@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,10 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.HomeActivity
-import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.imgur.service.GlideApp
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import kotlinx.android.synthetic.main.recycler_view_item.view.*
+import java.lang.Exception
 
 
 class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity)
@@ -39,30 +40,14 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
         val selButton = view.select_toggle!!
     }
 
-    // Post constructor : Bind actions for ActionBar
-    init {
-        // Action Delete
-        (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.setOnMenuItemClickListener { _ ->
-            if (!selecting)
-                return@setOnMenuItemClickListener true
-            selecting = false
-            setActionsVisibility(false)
-            (activity.supportFragmentManager.findFragmentById(R.id.contentFragment) as ImagesFragment).deleteSelectedImages(mRecyclerView!!, images)
-            images = ArrayList(images.filter { it ->
-                !it.selected
-            })
-            notifyDataSetChanged()
-            return@setOnMenuItemClickListener true
-        }
-        // Action Cancel
-        activity.actionMenu?.findItem(R.id.action_cancel)?.setOnMenuItemClickListener { _ ->
-            if (!selecting)
-                return@setOnMenuItemClickListener true
-            selecting = false
-            setActionsVisibility(false)
-            notifyDataSetChanged()
-            return@setOnMenuItemClickListener true
-        }
+    fun applySelection(): ArrayList<ImageModel> {
+        if (!selecting)
+            return ArrayList()
+        selecting = false
+        setActionsVisibility(false)
+        return ArrayList(images.filter { it ->
+            it.selected
+        })
     }
 
     // activate / deactivate ActionBar
@@ -145,21 +130,21 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
 
-        // security
-        if (position < images.size)
-            return
+        try {
+            // Load image in view
+            GlideApp
+                .with(context)
+                .load(images[position].link)
+                .placeholder(R.drawable.loader)
+                .thumbnail(Glide.with(context).load(R.drawable.loader))
+                .dontAnimate()
+                .into(holder.imageView)
 
-        // Load image in view
-        GlideApp
-            .with(context)
-            .load(images[position].link)
-            .placeholder(R.drawable.loader)
-            .thumbnail(Glide.with(context).load(R.drawable.loader))
-            .dontAnimate()
-            .into(holder.imageView)
-
-        // Setup view for selection
-        synchroniseSelect(holder, images[position])
+            // Setup view for selection
+            synchroniseSelect(holder, images[position])
+        } catch (e: Exception) {
+            Log.e("ImageBindError", e.message)
+        }
     }
 
 }

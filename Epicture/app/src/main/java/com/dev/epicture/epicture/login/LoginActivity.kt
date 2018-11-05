@@ -15,29 +15,49 @@ import com.dev.epicture.epicture.imgur.service.ImgurService
 
 class LoginActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+    // Setup the first connection
+    private fun setupFirstConnection() {
+
         val button = findViewById<Button>(R.id.button)
-        val card = findViewById<CardView>(R.id.card)
+
         button?.setOnClickListener {
-            ImgurService.authorize(this)
+            // Connect to Imgur and wait hook in this view
+            ImgurService.askCredentials(this)
+
+            // Card animation
             val scaleAnimation = ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.RELATIVE_TO_SELF, 0.7f, Animation.RELATIVE_TO_SELF, 0.7f)
             scaleAnimation.duration = 500
             val bounceInterpolator = BounceInterpolator()
             scaleAnimation.interpolator = bounceInterpolator
-            card.startAnimation(scaleAnimation)
+            findViewById<CardView>(R.id.card).startAnimation(scaleAnimation)
         }
+
     }
 
+    // Change activity
+    private fun galleryAccess() {
+        val newIntent = Intent(this, HomeActivity::class.java)
+        startActivity(newIntent)
+        finish()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
+        ImgurService.loadCredentials({
+            galleryAccess()
+        }, {
+            setupFirstConnection()
+        })
+    }
+
+    // Connect to Imgur and wait hook in this view
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         when (intent?.action) {
             Intent.ACTION_VIEW -> {
-                ImgurService.registerCallbackInformations(intent)
-                val newIntent = Intent(this, HomeActivity::class.java)
-                startActivity(newIntent)
-                finish()
+                ImgurService.registerCredentials(intent)
+                galleryAccess()
             }
         }
     }
