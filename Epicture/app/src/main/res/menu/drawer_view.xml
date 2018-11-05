@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/draw_images"
+                android:icon="@drawable/ic_images_primary"
+                android:title="@string/title_images" />
+        <item
+                android:id="@+id/draw_upload"
+                android:icon="@drawable/ic_upload_primary"
+                android:title="@string/title_upload" />
+        <item
+                android:id="@+id/draw_favorite"
+                android:icon="@drawable/button_favorite_accent"
+                android:title="@string/action_favorite" />
+        <item
+                android:id="@+id/draw_profile"
+                android:icon="@drawable/ic_face_black_24dp"
+                android:title="@string/user_profile" />
+        <item
+                android:id="@+id/draw_logout"
+                android:icon="@drawable/ic_power_settings_new_black_24dp"
+                android:title="@string/Logout_button" />
+    </group>
+</menu>
