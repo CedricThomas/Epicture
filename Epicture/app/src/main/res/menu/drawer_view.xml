@@ -11,15 +11,15 @@
                 android:title="@string/title_upload" />
         <item
                 android:id="@+id/draw_favorite"
-                android:icon="@drawable/button_favorite_accent"
+                android:icon="@drawable/ic_favorite_border_primary"
                 android:title="@string/action_favorite" />
         <item
                 android:id="@+id/draw_profile"
-                android:icon="@drawable/ic_face_black_24dp"
+                android:icon="@drawable/ic_face_primary"
                 android:title="@string/user_profile" />
         <item
                 android:id="@+id/draw_logout"
-                android:icon="@drawable/ic_power_settings_new_black_24dp"
+                android:icon="@drawable/ic_logout_primary"
                 android:title="@string/Logout_button" />
     </group>
 </menu>

@@ -24,7 +24,6 @@ class ImagesFragment : Fragment() {
         // Reload activation
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.isVisible = true
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.setOnMenuItemClickListener {
-            images.clear()
             loadActivePages(recyclerView)
             return@setOnMenuItemClickListener true
         }
@@ -76,10 +75,9 @@ class ImagesFragment : Fragment() {
     }
 
     private fun loadActivePages(recyclerView: RecyclerView) {
-
-        for (i in 0..page + 1)
-            loadImagesPage(recyclerView, i)
-
+            images.clear()
+            for (i in 0..page)
+                loadImagesPage(recyclerView, i)
     }
 
     override fun onCreateView(
@@ -112,6 +110,7 @@ class ImagesFragment : Fragment() {
                 for (image in resp.data)
                     images.add(image)
                 activity!!.runOnUiThread {
+                    Log.i("Size", images.size.toString())
                     recyclerView.adapter?.notifyDataSetChanged()
                 }
             } catch (e : Exception) {
