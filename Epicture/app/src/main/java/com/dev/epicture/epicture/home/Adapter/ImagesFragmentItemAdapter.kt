@@ -83,12 +83,12 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
         return images.size
     }
 
-    private fun synchroniseSelect(holder: ImageHolder, position: Int) {
+    private fun synchroniseSelect(holder: ImageHolder, model: ImageModel) {
 
         // Activation of select mod
         holder.imageView.setOnLongClickListener {
             if (!selecting) {
-                images[position].selected = true
+                model.selected = true
                 selecting = true
                 setActionsVisibility(true)
                 notifyDataSetChanged()
@@ -98,7 +98,7 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
 
         // lambda to toogle selection
         val toggle = { b: Boolean ->
-            images[position].selected = b
+            model.selected = b
             holder.selButton.isChecked = b
             if (b)
                 holder.imageView.setColorFilter(Color.rgb(150, 150, 150), PorterDuff.Mode.ADD)
@@ -133,7 +133,7 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
                 override fun onClick(p0: View?) {}
 
             })
-            toggle(images[position].selected)
+            toggle(model.selected)
 
         } else {
             // Set default selection
@@ -145,6 +145,10 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
 
     override fun onBindViewHolder(holder: ImageHolder, position: Int) {
 
+        // security
+        if (position < images.size)
+            return
+
         // Load image in view
         GlideApp
             .with(context)
@@ -155,7 +159,7 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
             .into(holder.imageView)
 
         // Setup view for selection
-        synchroniseSelect(holder, position)
+        synchroniseSelect(holder, images[position])
     }
 
 }

@@ -5,9 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import com.dev.epicture.epicture.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.R
@@ -55,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.images_menu, menu)
+        menuInflater.inflate(R.menu.gallery_menu, menu)
         actionMenu = menu
         setFragment(ImagesFragment())
         return true
