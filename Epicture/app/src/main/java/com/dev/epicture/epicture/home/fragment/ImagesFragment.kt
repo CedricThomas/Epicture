@@ -18,6 +18,7 @@ class ImagesFragment : Fragment() {
 
     private val images: ArrayList<ImageModel> = ArrayList()
 
+
     private fun activateReload(recyclingView: RecyclerView) {
         // Reload activation
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_refresh)?.isVisible = true
@@ -47,6 +48,8 @@ class ImagesFragment : Fragment() {
         return view
     }
 
+
+    // add a page in images array and update recycler view
     private fun loadImages(recyclerView: RecyclerView, page: Int) {
         ImgurService.getImages({ resp ->
             try {
@@ -63,6 +66,7 @@ class ImagesFragment : Fragment() {
         }, page.toString())
     }
 
+    // delete select item in array and reload all the pictures
     fun deleteSelectedImages(recyclerView: RecyclerView, images: ArrayList<ImageModel>) {
         val selected = images.filter { it ->
                         it.selected

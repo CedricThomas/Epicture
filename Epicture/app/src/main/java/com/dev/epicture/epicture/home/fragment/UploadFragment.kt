@@ -50,6 +50,9 @@ class UploadFragment : Fragment() {
         bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri)
         bitmapName = uri.path!!
         imageView?.setImageBitmap(bitmap)
+        imageView?.setOnClickListener {
+            choose()
+        }
         fragView?.findViewById<CardView>(R.id.choose_card)?.visibility = View.GONE
     }
 
