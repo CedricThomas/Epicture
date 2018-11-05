@@ -11,6 +11,7 @@ import android.view.MenuItem
 import com.dev.epicture.epicture.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.R
+import com.dev.epicture.epicture.home.fragment.UploadFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -45,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_upload -> {
-                setFragment(FavoritesFragment())
+                setFragment(UploadFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -66,8 +67,6 @@ class HomeActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-
     }
 
 }

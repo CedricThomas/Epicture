@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,10 +22,10 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import kotlinx.android.synthetic.main.recycler_view_item.view.*
 
 
-class GalleryItemAdapter(private var images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity) : RecyclerView.Adapter<GalleryItemAdapter.ImageHolder>() {
+class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity) : RecyclerView.Adapter<ImagesFragmentItemAdapter.ImageHolder>() {
 
-    var selecting = false
-    var mRecyclerView: RecyclerView? = null
+    private var selecting = false
+    private var mRecyclerView: RecyclerView? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         mRecyclerView = recyclerView
@@ -39,7 +38,7 @@ class GalleryItemAdapter(private var images : ArrayList<ImageModel>, private val
     }
 
     init {
-
+        // Action Delete
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.setOnMenuItemClickListener { _ ->
             if (!selecting)
                 return@setOnMenuItemClickListener true
@@ -52,7 +51,7 @@ class GalleryItemAdapter(private var images : ArrayList<ImageModel>, private val
             notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
-
+        // Action Cancel
         activity.actionMenu?.findItem(R.id.action_cancel)?.setOnMenuItemClickListener { _ ->
             if (!selecting)
                 return@setOnMenuItemClickListener true

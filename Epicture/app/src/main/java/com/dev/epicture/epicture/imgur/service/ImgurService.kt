@@ -13,12 +13,20 @@ import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import java.io.IOException
+import org.json.JSONObject
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.HttpUrl
+import android.graphics.Bitmap
+import android.R.attr.bitmap
+import android.util.Base64
+import java.io.ByteArrayOutputStream
 
 
 object ImgurService {
 
-    private val clientId: String = Config.clientID
-    private val clientSecret: String = Config.clientSecret
+    private const val clientId: String = Config.clientID
+    private const val clientSecret: String = Config.clientSecret
 
     private val host = "api.imgur.com"
     private val apiVersion = "3"
@@ -73,6 +81,44 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
+    fun uploadImage(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        name: String,
+        title: String,
+        description: String,
+        image: Bitmap
+    ) {
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("image")
+            .build()
+
+        val body = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("image", bitmapToBase64(image)!!)
+            .addFormDataPart("title", title)
+            .addFormDataPart("description", description)
+            .addFormDataPart("name", name)
+            .build()
+
+        val request = POSTBuilder(url, body)
+        return asyncLaunch(request!!, resolve, reject)
+    }
+
+    private fun POSTBuilder(url: HttpUrl, body: RequestBody): Request? {
+        return Request.Builder()
+            .url(url)
+            .header("Authorization", "Client-ID $clientId")
+            .header("Authorization", "Bearer ${informations["access_token"]}")
+            .header("User-Agent", "Epicture")
+            .post(body)
+            .build()
+    }
+
     private fun GETBuilder(url: HttpUrl): Request? {
         return Request.Builder()
             .url(url)
@@ -91,6 +137,13 @@ object ImgurService {
             .header("User-Agent", "Epicture")
             .delete()
             .build()
+    }
+
+    private fun bitmapToBase64(bmp: Bitmap): String? {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     private fun asyncLaunch(request: Request, resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit) {
