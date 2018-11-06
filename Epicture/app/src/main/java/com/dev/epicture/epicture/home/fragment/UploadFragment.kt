@@ -1,5 +1,6 @@
 package com.dev.epicture.epicture.home.fragment
 
+import android.animation.Animator
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -7,15 +8,18 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.imgur.service.ImgurService
+import android.animation.AnimatorListenerAdapter
+
 
 class UploadFragment : Fragment() {
 
@@ -24,25 +28,62 @@ class UploadFragment : Fragment() {
     private var bitmap: Bitmap? = null
     private var bitmapName: String = ""
 
-    fun choose() {
+    private fun printMessage(message: String) {
+        Toast.makeText(MyApplication.appContext, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun choose() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
     }
 
-    fun upload() {
-        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)?.text
-        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)?.text
+    private fun resetForm() {
+
+        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)
+        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)
+        val card = fragView?.findViewById<CardView>(R.id.choose_card)
+        val preview = fragView?.findViewById<ImageView>(R.id.imagePreview)
+
+        title?.text?.clear()
+        desc?.text?.clear()
+        bitmapName = ""
+        card?.visibility = View.VISIBLE
+        preview?.animate()
+            ?.translationY(-preview.height.toFloat())
+            ?.alpha(0.0f)
+            ?.setDuration(300)
+            ?.setListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+
+                    super.onAnimationEnd(animation)
+                    preview.visibility = View.INVISIBLE
+
+                }
+            })
+    }
+
+    private fun upload() {
+        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)?.text.toString()
+        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)?.text.toString()
+
         if (title?.isEmpty()!! || desc?.isEmpty()!! || bitmapName.isEmpty() || bitmap == null) {
-            Log.e("Error Upload", "Fill every field")
-            return
+            return printMessage("Missing fields")
         }
-        ImgurService.uploadImage({it ->
-            Log.i("Upload", it.toString())
-        },{it ->
-            Log.i("UploadError", it.message)
+
+        ImgurService.uploadImage({
+            activity?.runOnUiThread {
+                printMessage("Upload of $title succeed")
+            }
+        },{
+            activity?.runOnUiThread {
+                printMessage("Upload of $title failed")
+            }
         }, bitmapName, title.toString(), desc.toString(), bitmap!!)
+
+        resetForm()
     }
 
     private fun changeBitmap(uri: Uri?) {

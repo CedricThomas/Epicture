@@ -98,7 +98,7 @@ class ImagesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_gallery, container, false)
+        val view = inflater.inflate(R.layout.fragment_gallery_images, container, false)
 
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)

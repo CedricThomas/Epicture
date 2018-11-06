@@ -19,7 +19,7 @@ import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.GlideApp
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
-import kotlinx.android.synthetic.main.recycler_view_item.view.*
+import kotlinx.android.synthetic.main.image_item.view.*
 import java.lang.Exception
 
 
@@ -58,7 +58,7 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
 
     // Configure Image Holder
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ImageHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.recycler_view_item, parent, false)
+        val inflatedView = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false)
         val holder = ImageHolder(inflatedView)
         holder.favButton.visibility = View.INVISIBLE
         return holder

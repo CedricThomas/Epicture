@@ -79,6 +79,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
