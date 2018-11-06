@@ -32,23 +32,23 @@ class UploadFragment : Fragment() {
     }
 
     fun upload() {
-        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)!!.text
-        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)!!.text
-        if (title.isEmpty() || desc.isEmpty() || bitmapName.isEmpty() || bitmap == null) {
+        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)?.text
+        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)?.text
+        if (title?.isEmpty()!! || desc?.isEmpty()!! || bitmapName.isEmpty() || bitmap == null) {
             Log.e("Error Upload", "Fill every field")
             return
         }
         ImgurService.uploadImage({it ->
-            Log.i("Upload", it.asString)
+            Log.i("Upload", it.toString())
         },{it ->
             Log.i("UploadError", it.message)
         }, bitmapName, title.toString(), desc.toString(), bitmap!!)
     }
 
-    private fun changeBitmap(uri: Uri) {
+    private fun changeBitmap(uri: Uri?) {
         val imageView=  fragView?.findViewById<ImageView>(R.id.imagePreview)
         bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri)
-        bitmapName = uri.path!!
+        bitmapName = uri?.path!!
         imageView?.setImageBitmap(bitmap)
         imageView?.setOnClickListener {
             choose()
@@ -59,7 +59,7 @@ class UploadFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == PICK_IMAGE) {
             val imageUri = data?.data
-            changeBitmap(imageUri!!)
+            changeBitmap(imageUri)
         }
     }
 

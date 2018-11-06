@@ -3,9 +3,13 @@ package com.dev.epicture.epicture.home
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
+import android.view.MenuItem
 import com.dev.epicture.epicture.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.R
@@ -26,6 +30,17 @@ class HomeActivity : AppCompatActivity() {
         val t = supportFragmentManager.beginTransaction()
         t.replace(R.id.contentFragment, fragment)
         t.commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                findViewById<DrawerLayout>(R.id.drawer_layout).openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -65,6 +80,10 @@ class HomeActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu_secondary)
+        }
     }
 
 }

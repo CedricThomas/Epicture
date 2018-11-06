@@ -9,10 +9,6 @@
                                         android:fitsSystemWindows="true">
 
     <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
-    <FrameLayout
-            android:id="@+id/content_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,6 +19,14 @@
             android:layout_height="match_parent"
             tools:context=".home.HomeActivity" android:background="@color/colorPrimary">
 
+        <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/contentFragment" android:layout_marginTop="0dp"
+                app:layout_constraintTop_toTopOf="@+id/contentFragment"/>
         <include layout="@layout/action_bar" android:id="@+id/action_bar"
                  app:layout_constraintTop_toTopOf="parent"/>
 

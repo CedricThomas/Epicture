@@ -17,7 +17,7 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 class ImagesFragment : Fragment() {
 
     private var images: ArrayList<ImageModel> = ArrayList()
-    private var onNewPage: Boolean = false
+    private var loading: Boolean = false
     private var page: Int = 0
 
     private fun activateReload(recyclerView: RecyclerView) {
@@ -60,14 +60,17 @@ class ImagesFragment : Fragment() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (!recyclerView.canScrollVertically(1) && !onNewPage) {
+                if (!recyclerView.canScrollVertically(1) && !loading) {
                     val size = images.size
-                    onNewPage = true
-                    loadImagesPage(recyclerView, page + 1) {
+                    loading = true
+                    loadImagesPage(page + 1) {
                         if (images.size > size) {
                             page += 1
                         }
-                        onNewPage = false
+                        loading = false
+                        activity!!.runOnUiThread {
+                            recyclerView.adapter?.notifyDataSetChanged()
+                        }
                     }
                 }
             }
@@ -75,9 +78,19 @@ class ImagesFragment : Fragment() {
     }
 
     private fun loadActivePages(recyclerView: RecyclerView) {
-            images.clear()
-            for (i in 0..page)
-                loadImagesPage(recyclerView, i)
+        if (loading)
+            return
+        images.clear()
+        loading = true
+        for (i in 0..page)
+            loadImagesPage(i) {
+                if (i == page) {
+                    activity!!.runOnUiThread {
+                        recyclerView.adapter?.notifyDataSetChanged()
+                    }
+                    loading = false
+                }
+            }
     }
 
     override fun onCreateView(
@@ -104,15 +117,12 @@ class ImagesFragment : Fragment() {
 
 
     // add a page in images array and update recycler view
-    private fun loadImagesPage(recyclerView: RecyclerView, page: Int, callback: () -> Unit = {}) {
+    private fun loadImagesPage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getImages({ resp ->
             try {
                 for (image in resp.data)
                     images.add(image)
-                activity!!.runOnUiThread {
-                    Log.i("Size", images.size.toString())
-                    recyclerView.adapter?.notifyDataSetChanged()
-                }
+                images.distinctBy { it.id }
             } catch (e : Exception) {
                 Log.i("LoadImages", e.message)
             }

@@ -21,6 +21,7 @@ import android.preference.PreferenceManager
 import android.util.Base64
 import com.dev.epicture.epicture.MyApplication
 import java.io.ByteArrayOutputStream
+import kotlin.concurrent.thread
 
 
 object ImgurService {
@@ -185,23 +186,26 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
-        val url = HttpUrl.Builder()
-            .scheme("https")
-            .host(host)
-            .addPathSegment(apiVersion)
-            .addPathSegment("image")
-            .build()
+        Thread(Runnable {
+            val url = HttpUrl.Builder()
+                .scheme("https")
+                .host(host)
+                .addPathSegment(apiVersion)
+                .addPathSegment("image")
+                .build()
 
-        val body = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("image", bitmapToBase64(image)!!)
-            .addFormDataPart("title", title)
-            .addFormDataPart("description", description)
-            .addFormDataPart("name", name)
-            .build()
+            val body = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("image", "image.jpg", bitmapToByteArray(image))
+                .addFormDataPart("title", title)
+                .addFormDataPart("description", description)
+                .addFormDataPart("name", name)
+                .build()
 
-        val request = POSTBuilder(url, body)
-        return asyncLaunch(request!!, resolve, reject)
+            val request = POSTBuilder(url, body)
+            asyncLaunch(request!!, resolve, reject)
+
+        }).start()
     }
 
     private fun POSTBuilder(url: HttpUrl, body: RequestBody): Request? {
@@ -234,11 +238,11 @@ object ImgurService {
             .build()
     }
 
-    private fun bitmapToBase64(bmp: Bitmap): String? {
+    private fun bitmapToByteArray(bmp: Bitmap): RequestBody {
         val byteArrayOutputStream = ByteArrayOutputStream()
         bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val byteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+        return RequestBody.create(MediaType.parse("image/*jpg"), byteArrayOutputStream.toByteArray())
+
     }
 
     private fun asyncLaunch(request: Request, resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit) {
@@ -248,9 +252,11 @@ object ImgurService {
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val data = Gson().fromJson<JsonElement>(response.body()!!.string()!!, JsonElement::class.java)
+                    Log.i("Resp", data.toString())
                     val dataModel = data.asJsonObject
                     if (dataModel.get("success").asBoolean)
                         return resolve(data)
+                    Log.i("Resp", "Failed !!")
                     return reject(java.lang.Exception("Invalid response : $response"))
                 } catch (e: Exception) {
                     return reject(e)
