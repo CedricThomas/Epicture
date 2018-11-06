@@ -14,11 +14,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import android.animation.AnimatorListenerAdapter
+import android.util.Log
 
 
 class UploadFragment : Fragment() {
@@ -27,10 +27,6 @@ class UploadFragment : Fragment() {
     private var fragView: View? = null
     private var bitmap: Bitmap? = null
     private var bitmapName: String = ""
-
-    private fun printMessage(message: String) {
-        Toast.makeText(MyApplication.appContext, message, Toast.LENGTH_SHORT).show()
-    }
 
     private fun choose() {
         val intent = Intent()
@@ -59,7 +55,10 @@ class UploadFragment : Fragment() {
                 override fun onAnimationEnd(animation: Animator) {
 
                     super.onAnimationEnd(animation)
-                    preview.visibility = View.INVISIBLE
+                    preview.setImageBitmap(null)
+                    preview.y = preview.y + preview.height.toFloat()
+                    preview.alpha = 1.0f
+
 
                 }
             })
@@ -69,19 +68,21 @@ class UploadFragment : Fragment() {
         val title = fragView?.findViewById<EditText>(R.id.editTextTitle)?.text.toString()
         val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)?.text.toString()
 
-        if (title?.isEmpty()!! || desc?.isEmpty()!! || bitmapName.isEmpty() || bitmap == null) {
-            return printMessage("Missing fields")
+        val context = activity
+
+        if (title.isEmpty() || desc.isEmpty() || bitmapName.isEmpty() || bitmap == null) {
+            return MyApplication.printMessage("Missing fields")
         }
 
         ImgurService.uploadImage({
-            activity?.runOnUiThread {
-                printMessage("Upload of $title succeed")
+            context?.runOnUiThread {
+                MyApplication.printMessage("Upload of $title succeed")
             }
         },{
-            activity?.runOnUiThread {
-                printMessage("Upload of $title failed")
+            context?.runOnUiThread {
+                MyApplication.printMessage("Upload of $title failed")
             }
-        }, bitmapName, title.toString(), desc.toString(), bitmap!!)
+        }, bitmapName, title, desc, bitmap!!)
 
         resetForm()
     }

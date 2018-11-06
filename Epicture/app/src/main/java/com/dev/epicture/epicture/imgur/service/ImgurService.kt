@@ -63,7 +63,6 @@ object ImgurService {
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext)
         for (key in prefKeys) {
             val pref = prefs.getString(key, "")!!
-            Log.i("Credentials loading", "$key :  $pref")
             if (pref.isEmpty()) {
                 informations.clear()
                 return false
@@ -77,7 +76,6 @@ object ImgurService {
         val editor= PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext).edit()
         for (key in prefKeys) {
             editor.putString(key, informations[key])
-            Log.i(key, informations[key]!!)
         }
         editor.apply()
     }
@@ -252,11 +250,9 @@ object ImgurService {
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val data = Gson().fromJson<JsonElement>(response.body()!!.string()!!, JsonElement::class.java)
-                    Log.i("Resp", data.toString())
                     val dataModel = data.asJsonObject
                     if (dataModel.get("success").asBoolean)
                         return resolve(data)
-                    Log.i("Resp", "Failed !!")
                     return reject(java.lang.Exception("Invalid response : $response"))
                 } catch (e: Exception) {
                     return reject(e)

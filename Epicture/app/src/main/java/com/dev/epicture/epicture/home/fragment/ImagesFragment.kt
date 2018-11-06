@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.Adapter.ImagesFragmentItemAdapter
 import com.dev.epicture.epicture.home.HomeActivity
@@ -124,11 +124,11 @@ class ImagesFragment : Fragment() {
                     images.add(image)
                 images.distinctBy { it.id }
             } catch (e : Exception) {
-                Log.i("LoadImages", e.message)
+                MyApplication.printMessage("Failed to load images page $page")
             }
             callback()
         }, {e ->
-            Log.i("LoadImages", e.message)
+            MyApplication.printMessage("Failed to load images page $page")
             callback()
         }, page.toString())
     }
@@ -137,9 +137,8 @@ class ImagesFragment : Fragment() {
     private fun deleteImages(images: ArrayList<ImageModel>) {
         for (image in images) {
             ImgurService.deleteImage({ resp ->
-                Log.i("DeleteSelectedImages", resp.asString)
             }, {resp ->
-                Log.i("DeleteFailure", resp.message)
+                MyApplication.printMessage("Failed to delete image ${image.id}")
             }, image.id!!)
         }
 
