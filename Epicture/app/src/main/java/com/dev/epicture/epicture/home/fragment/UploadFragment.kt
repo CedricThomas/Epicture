@@ -1,12 +1,12 @@
 package com.dev.epicture.epicture.home.fragment
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,14 +17,10 @@ import android.widget.ImageView
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.imgur.service.ImgurService
-import android.animation.AnimatorListenerAdapter
-import android.util.Log
 
-
-class UploadFragment : Fragment() {
+class UploadFragment : GalleryFragment() {
 
     private val PICK_IMAGE = 1
-    private var fragView: View? = null
     private var bitmap: Bitmap? = null
     private var bitmapName: String = ""
 
@@ -37,10 +33,10 @@ class UploadFragment : Fragment() {
 
     private fun resetForm() {
 
-        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)
-        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)
-        val card = fragView?.findViewById<CardView>(R.id.choose_card)
-        val preview = fragView?.findViewById<ImageView>(R.id.imagePreview)
+        val title = view?.findViewById<EditText>(R.id.editTextTitle)
+        val desc = view?.findViewById<EditText>(R.id.editTextDesc)
+        val card = view?.findViewById<CardView>(R.id.choose_card)
+        val preview = view?.findViewById<ImageView>(R.id.imagePreview)
 
         title?.text?.clear()
         desc?.text?.clear()
@@ -65,8 +61,8 @@ class UploadFragment : Fragment() {
     }
 
     private fun upload() {
-        val title = fragView?.findViewById<EditText>(R.id.editTextTitle)?.text.toString()
-        val desc = fragView?.findViewById<EditText>(R.id.editTextDesc)?.text.toString()
+        val title = view?.findViewById<EditText>(R.id.editTextTitle)?.text.toString()
+        val desc = view?.findViewById<EditText>(R.id.editTextDesc)?.text.toString()
 
         val context = activity
 
@@ -88,14 +84,16 @@ class UploadFragment : Fragment() {
     }
 
     private fun changeBitmap(uri: Uri?) {
-        val imageView=  fragView?.findViewById<ImageView>(R.id.imagePreview)
-        bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri)
-        bitmapName = uri?.path!!
-        imageView?.setImageBitmap(bitmap)
-        imageView?.setOnClickListener {
-            choose()
+        val imageView=  view?.findViewById<ImageView>(R.id.imagePreview)
+        if (uri != null) {
+            bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri)
+            bitmapName = uri.path!!
+            imageView?.setImageBitmap(bitmap)
+            imageView?.setOnClickListener {
+                choose()
+            }
+            view?.findViewById<CardView>(R.id.choose_card)?.visibility = View.GONE
         }
-        fragView?.findViewById<CardView>(R.id.choose_card)?.visibility = View.GONE
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -109,7 +107,7 @@ class UploadFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragView = inflater.inflate(R.layout.fragment_upload, container, false)
+        val fragView = inflater.inflate(R.layout.fragment_upload, container, false)
         val chooseButton = fragView?.findViewById<Button>(R.id.buttonChoose)
         chooseButton?.setOnClickListener {
             choose()

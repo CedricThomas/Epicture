@@ -1,9 +1,9 @@
 package com.dev.epicture.epicture.home.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
+import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,8 @@ import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 
-class ImagesFragment : Fragment() {
+
+class ImagesFragment : GalleryFragment() {
 
     private var images: ArrayList<ImageModel> = ArrayList()
     private var loading: Boolean = false
@@ -93,6 +94,8 @@ class ImagesFragment : Fragment() {
             }
     }
 
+    private var adapter: ImagesFragmentItemAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -101,9 +104,10 @@ class ImagesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_gallery_images, container, false)
 
 
+        adapter = ImagesFragmentItemAdapter(images, context!!, activity!!)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView?.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        recyclerView?.adapter = ImagesFragmentItemAdapter(images, context!!, activity!!)
+        recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        recyclerView?.adapter = adapter
 
         activateReload(recyclerView)
         activateDelete(recyclerView)
@@ -127,7 +131,7 @@ class ImagesFragment : Fragment() {
                 MyApplication.printMessage("Failed to load images page $page")
             }
             callback()
-        }, {e ->
+        }, {
             MyApplication.printMessage("Failed to load images page $page")
             callback()
         }, page.toString())
@@ -136,13 +140,28 @@ class ImagesFragment : Fragment() {
     // delete select item from array
     private fun deleteImages(images: ArrayList<ImageModel>) {
         for (image in images) {
-            ImgurService.deleteImage({ resp ->
-            }, {resp ->
+            ImgurService.deleteImage({
+            }, {
                 MyApplication.printMessage("Failed to delete image ${image.id}")
             }, image.id!!)
         }
 
     }
 
+    override fun getSearchListener(): SearchView.OnQueryTextListener {
+        return object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                adapter?.filter?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                adapter?.filter?.filter(query)
+                return false
+            }
+
+        }
+    }
 }
 

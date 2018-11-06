@@ -12,8 +12,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.BounceInterpolator
 import android.view.animation.ScaleAnimation
-import android.widget.CompoundButton
-import android.widget.ImageView
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.HomeActivity
@@ -23,9 +22,10 @@ import kotlinx.android.synthetic.main.image_item.view.*
 import java.lang.Exception
 
 
-class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, private val context: Context, private val activity: Activity)
-: RecyclerView.Adapter<ImagesFragmentItemAdapter.ImageHolder>() {
+class ImagesFragmentItemAdapter(private var imagesFull : ArrayList<ImageModel>, private val context: Context, private val activity: Activity)
+: RecyclerView.Adapter<ImagesFragmentItemAdapter.ImageHolder>(), Filterable {
 
+    var images = imagesFull
     private var selecting = false
     private var mRecyclerView: RecyclerView? = null
 
@@ -36,7 +36,7 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
     // Data Holder /!\ Do not use for status storage
     inner class ImageHolder (view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.imageView
-        val favButton = view.favorite_toggle!!
+        val textView: TextView = view.textView
         val selButton = view.select_toggle!!
     }
 
@@ -51,16 +51,16 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
     }
 
     // activate / deactivate ActionBar
-    private fun setActionsVisibility(status: Boolean) {
+    private fun setActionsVisibility(status: Boolean)  {
         (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.isVisible = status
         activity.actionMenu?.findItem(R.id.action_cancel)?.isVisible = status
+        activity.actionMenu?.findItem(R.id.action_search)?.isVisible = !status
     }
 
     // Configure Image Holder
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ImageHolder {
         val inflatedView = LayoutInflater.from(context).inflate(R.layout.image_item, parent, false)
         val holder = ImageHolder(inflatedView)
-        holder.favButton.visibility = View.INVISIBLE
         return holder
     }
 
@@ -139,11 +139,37 @@ class ImagesFragmentItemAdapter(private var images : ArrayList<ImageModel>, priv
                 .thumbnail(Glide.with(context).load(R.drawable.loader))
                 .dontAnimate()
                 .into(holder.imageView)
-
+            holder.textView.text = images[position].title
             // Setup view for selection
             synchroniseSelect(holder, images[position])
         } catch (e: Exception) {
             Log.e("ImageBindError", e.message)
+        }
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                val charString = charSequence.toString()
+                images = if (charString.isEmpty()) {
+                    imagesFull
+                } else {
+                    val filteredList = ArrayList<ImageModel>()
+                    for (row in imagesFull)
+                        if (row.description?.contains(charString)!! || row.title?.contains(charString)!!)
+                            filteredList.add(row)
+                    filteredList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = images
+                return filterResults
+            }
+
+            override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                images = filterResults.values as ArrayList<ImageModel>
+                notifyDataSetChanged()
+            }
         }
     }
 
