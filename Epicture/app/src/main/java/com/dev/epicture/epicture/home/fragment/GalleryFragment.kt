@@ -1,9 +1,22 @@
 package com.dev.epicture.epicture.home.fragment
 
+import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
+import com.dev.epicture.epicture.home.HomeActivity
 
-open class GalleryFragment: Fragment() {
+import com.dev.epicture.epicture.home.HomeActivity.ActionMenuManager
+
+open class GalleryFragment : Fragment() {
+
+    lateinit var menuManager: ActionMenuManager
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val activity = (activity as HomeActivity)
+        menuManager = activity.getMenuManager()
+        menuManager.search.setOnQueryTextListener(getSearchListener())
+    }
 
     open fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {

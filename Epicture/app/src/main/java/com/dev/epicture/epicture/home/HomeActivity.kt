@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.home.fragment.GalleryFragment
@@ -21,25 +22,39 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
-    var actionMenu : Menu? = null
-    var searchView: SearchView? = null
+    lateinit var actionMenu : Menu
+    private lateinit var searchView: SearchView
 
-    companion object {
-        val galleryFragment = ImagesFragment()
-        val favoritesFragment = FavoritesFragment()
-        val searchFragment = FavoritesFragment()
-        val uploadFragment = UploadFragment()
+    inner class ActionMenuManager(actionMenu : Menu) {
+
+        val refresh: MenuItem = actionMenu.findItem(R.id.action_refresh)
+        val favorite: MenuItem = actionMenu.findItem(R.id.action_favorite)
+        val delete: MenuItem = actionMenu.findItem(R.id.action_delete)
+        val cancel: MenuItem = actionMenu.findItem(R.id.action_cancel)
+        val selectAll: MenuItem = actionMenu.findItem(R.id.action_select_all)
+        val search: SearchView = actionMenu.findItem(R.id.action_search).actionView as SearchView
+
+        init {
+
+            if (!searchView.isIconified) {
+                searchView.isIconified = true
+            }
+
+            refresh.isVisible = false
+            favorite.isVisible = false
+            delete.isVisible = false
+            cancel.isVisible = false
+            selectAll.isVisible = false
+            search.visibility = View.INVISIBLE
+        }
+
+    }
+
+    fun getMenuManager(): ActionMenuManager {
+        return ActionMenuManager(actionMenu)
     }
 
     private fun setFragment(fragment: GalleryFragment) {
-
-        actionMenu?.findItem(R.id.action_refresh)?.isVisible = false
-        actionMenu?.findItem(R.id.action_favorite)?.isVisible = false
-        actionMenu?.findItem(R.id.action_delete)?.isVisible = false
-        actionMenu?.findItem(R.id.action_cancel)?.isVisible = false
-
-        searchView?.setOnQueryTextListener(fragment.getSearchListener())
-
         val t = supportFragmentManager.beginTransaction()
         t.replace(R.id.contentFragment, fragment)
         t.commit()
@@ -60,19 +75,19 @@ class HomeActivity : AppCompatActivity() {
 
         when (item.itemId) {
             R.id.navigation_images -> {
-                setFragment(galleryFragment)
+                setFragment(ImagesFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_favorite -> {
-                setFragment(favoritesFragment)
+                setFragment(FavoritesFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                setFragment(searchFragment)
+                setFragment(FavoritesFragment())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_upload -> {
-                setFragment(uploadFragment)
+                setFragment(UploadFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -87,13 +102,13 @@ class HomeActivity : AppCompatActivity() {
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.action_search).actionView as SearchView
-        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView!!.maxWidth = Integer.MAX_VALUE
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.maxWidth = Integer.MAX_VALUE
 
+        // Fragment need thee actionMenu
         setFragment(ImagesFragment())
         return true
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +123,14 @@ class HomeActivity : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.ic_menu_secondary)
         }
 
+    }
+
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

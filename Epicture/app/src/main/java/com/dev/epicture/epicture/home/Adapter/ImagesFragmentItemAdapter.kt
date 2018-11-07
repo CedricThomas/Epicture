@@ -1,6 +1,5 @@
 package com.dev.epicture.epicture.home.Adapter
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -22,15 +21,18 @@ import kotlinx.android.synthetic.main.image_item.view.*
 import java.lang.Exception
 
 
-class ImagesFragmentItemAdapter(private var imagesFull : ArrayList<ImageModel>, private val context: Context, private val activity: Activity)
+class ImagesFragmentItemAdapter(
+    private var imagesFull: ArrayList<ImageModel>,
+    private val context: Context,
+    private val actionMenu: HomeActivity.ActionMenuManager)
 : RecyclerView.Adapter<ImagesFragmentItemAdapter.ImageHolder>(), Filterable {
 
     var images = imagesFull
-    private var selecting = false
-    private var mRecyclerView: RecyclerView? = null
+    var selecting = false
+    private lateinit var recyclerView: RecyclerView
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        mRecyclerView = recyclerView
+        this.recyclerView = recyclerView
     }
 
     // Data Holder /!\ Do not use for status storage
@@ -52,9 +54,9 @@ class ImagesFragmentItemAdapter(private var imagesFull : ArrayList<ImageModel>, 
 
     // activate / deactivate ActionBar
     private fun setActionsVisibility(status: Boolean)  {
-        (activity as HomeActivity).actionMenu?.findItem(R.id.action_delete)?.isVisible = status
-        activity.actionMenu?.findItem(R.id.action_cancel)?.isVisible = status
-        activity.actionMenu?.findItem(R.id.action_search)?.isVisible = !status
+        actionMenu.delete.isVisible = status
+        actionMenu.cancel.isVisible = status
+        actionMenu.refresh.isVisible = !status
     }
 
     // Configure Image Holder
@@ -167,8 +169,8 @@ class ImagesFragmentItemAdapter(private var imagesFull : ArrayList<ImageModel>, 
             }
 
             override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-                images = filterResults.values as ArrayList<ImageModel>
-                notifyDataSetChanged()
+                    images = (filterResults.values  as? ArrayList<ImageModel>)!!
+                    notifyDataSetChanged()
             }
         }
     }

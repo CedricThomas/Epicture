@@ -23,5 +23,7 @@
     <string name="upload">Upload</string>
     <string name="user_profile">Profile</string>
     <string name="Logout_button">Logout</string>
+    <string name="search">Search</string>
+    <string name="select_all">Select all</string>
 
 </resources>
