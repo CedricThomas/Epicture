@@ -16,15 +16,19 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 
 class ImagesFragment : GalleryFragment() {
 
-    private lateinit var mView: View
+    private lateinit var fragView: View
     private lateinit var adapter: ImagesFragmentItemAdapter
-
     private var images: ArrayList<ImageModel> = ArrayList()
     private var loading: Boolean = false
     private var page: Int = 0
     private var all = true
 
-
+    // activate / deactivate ActionBar
+    private fun setActionsVisibility(status: Boolean)  {
+        menuManager.delete.isVisible = status
+        menuManager.cancel.isVisible = status
+        menuManager.refresh.isVisible = !status
+    }
 
     // Select all Activation
     private fun activateSelectAll(recyclerView: RecyclerView) {
@@ -32,10 +36,11 @@ class ImagesFragment : GalleryFragment() {
         menuManager.selectAll.isVisible = true
         menuManager.selectAll.setOnMenuItemClickListener {
             val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
-            adapter.selecting = all
+            adapter.selecting = true
             for (elem in images)
                 elem.selected = all
             all = !all
+            setActionsVisibility(true)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
@@ -46,6 +51,7 @@ class ImagesFragment : GalleryFragment() {
         // Reload activation
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
+            all = false
             loadActivePages(recyclerView)
             return@setOnMenuItemClickListener true
         }
@@ -54,12 +60,15 @@ class ImagesFragment : GalleryFragment() {
     // Delete activation
     private fun activateDelete(recyclerView: RecyclerView) {
         menuManager.delete.setOnMenuItemClickListener {
+            all = false
             val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
-            val removed = adapter.applySelection()
+            val removed = adapter.getSelection()
             for (elem in removed)
                 images.remove(elem)
             deleteImages(removed)
-            recyclerView.adapter?.notifyDataSetChanged()
+            adapter.selecting = false
+            setActionsVisibility(false)
+            adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
     }
@@ -68,11 +77,13 @@ class ImagesFragment : GalleryFragment() {
     private fun activateCancelSelection(recyclerView: RecyclerView) {
         menuManager.cancel.setOnMenuItemClickListener {
             val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
-            val selected = adapter.applySelection()
+            val selected = adapter.getSelection()
             selected.forEach { image ->
                 image.selected = false
             }
-            recyclerView.adapter?.notifyDataSetChanged()
+            adapter.selecting = false
+            setActionsVisibility(false)
+            adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
     }
@@ -90,7 +101,7 @@ class ImagesFragment : GalleryFragment() {
                             page += 1
                         }
                         loading = false
-                        activity!!.runOnUiThread {
+                        activity?.runOnUiThread {
                             recyclerView.adapter?.notifyDataSetChanged()
                         }
                     }
@@ -100,8 +111,17 @@ class ImagesFragment : GalleryFragment() {
     }
 
     private fun createRecyclerView() {
-        adapter = ImagesFragmentItemAdapter(images, context!!, menuManager)
-        val recyclerView = mView.findViewById<RecyclerView>(R.id.recycler_view)
+
+        adapter = ImagesFragmentItemAdapter(images, context!!) { adapter, model ->
+            if (!adapter.selecting) {
+                model.selected = true
+                adapter.selecting = true
+                setActionsVisibility(true)
+                adapter.notifyDataSetChanged()
+            }
+            true
+        }
+        val recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
 
@@ -122,7 +142,7 @@ class ImagesFragment : GalleryFragment() {
         for (i in 0..page)
             loadImagesPage(i) {
                 if (i == page) {
-                    activity!!.runOnUiThread {
+                    activity?.runOnUiThread {
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
                     loading = false
@@ -134,9 +154,9 @@ class ImagesFragment : GalleryFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = inflater.inflate(R.layout.fragment_gallery_images, container, false)
+        fragView = inflater.inflate(R.layout.fragment_gallery_images, container, false)
         createRecyclerView()
-        return mView
+        return fragView
     }
 
     // add a page in images array and update recycler view
@@ -167,6 +187,7 @@ class ImagesFragment : GalleryFragment() {
 
     }
 
+    // add a search listener
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

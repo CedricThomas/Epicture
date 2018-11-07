@@ -14,7 +14,6 @@ import android.view.animation.ScaleAnimation
 import android.widget.*
 import com.bumptech.glide.Glide
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.HomeActivity
 import com.dev.epicture.epicture.imgur.service.GlideApp
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import kotlinx.android.synthetic.main.image_item.view.*
@@ -24,7 +23,7 @@ import java.lang.Exception
 class ImagesFragmentItemAdapter(
     private var imagesFull: ArrayList<ImageModel>,
     private val context: Context,
-    private val actionMenu: HomeActivity.ActionMenuManager)
+    private val selectActivator: (ImagesFragmentItemAdapter, ImageModel) -> Boolean)
 : RecyclerView.Adapter<ImagesFragmentItemAdapter.ImageHolder>(), Filterable {
 
     var images = imagesFull
@@ -42,22 +41,14 @@ class ImagesFragmentItemAdapter(
         val selButton = view.select_toggle!!
     }
 
-    fun applySelection(): ArrayList<ImageModel> {
+    fun getSelection(): ArrayList<ImageModel> {
         if (!selecting)
             return ArrayList()
-        selecting = false
-        setActionsVisibility(false)
         return ArrayList(images.filter { it ->
             it.selected
         })
     }
 
-    // activate / deactivate ActionBar
-    private fun setActionsVisibility(status: Boolean)  {
-        actionMenu.delete.isVisible = status
-        actionMenu.cancel.isVisible = status
-        actionMenu.refresh.isVisible = !status
-    }
 
     // Configure Image Holder
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ImageHolder {
@@ -74,13 +65,7 @@ class ImagesFragmentItemAdapter(
 
         // Activation of select mod
         holder.imageView.setOnLongClickListener {
-            if (!selecting) {
-                model.selected = true
-                selecting = true
-                setActionsVisibility(true)
-                notifyDataSetChanged()
-            }
-            return@setOnLongClickListener true
+            return@setOnLongClickListener selectActivator(this, model)
         }
 
         // lambda to toogle selection

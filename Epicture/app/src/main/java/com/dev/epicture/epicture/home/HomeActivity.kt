@@ -2,13 +2,16 @@ package com.dev.epicture.epicture.home
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +20,8 @@ import com.dev.epicture.epicture.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.home.fragment.GalleryFragment
 import com.dev.epicture.epicture.home.fragment.ImagesFragment
 import com.dev.epicture.epicture.home.fragment.UploadFragment
+import com.dev.epicture.epicture.imgur.service.ImgurService
+import com.dev.epicture.epicture.login.LoginActivity
 import kotlinx.android.synthetic.main.activity_home.*
 
 
@@ -94,6 +99,20 @@ class HomeActivity : AppCompatActivity() {
         false
     }
 
+    private val mOnDrawerItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
+
+        when (item.itemId) {
+            R.id.draw_logout -> {
+                ImgurService.deleteCredentials()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
@@ -118,6 +137,7 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        nav_view.setNavigationItemSelectedListener(mOnDrawerItemSelectedListener)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_secondary)

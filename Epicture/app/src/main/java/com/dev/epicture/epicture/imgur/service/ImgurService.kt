@@ -53,6 +53,11 @@ object ImgurService {
         startActivity(context, intent, null)
     }
 
+    fun deleteCredentials() {
+        val editor= PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext).edit()
+        editor.clear().apply()
+    }
+
     fun loadCredentials(resolve: () -> Unit, reject: () -> Unit) {
         if (!loadFromPrefs())
             return reject()
@@ -133,7 +138,6 @@ object ImgurService {
     }
 
     // Get Images
-
     fun getImages(resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         if (!authenticated)
             throw IOException("You are not connected")
