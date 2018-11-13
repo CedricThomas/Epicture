@@ -2,6 +2,7 @@ package com.dev.epicture.epicture.home.fragment
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -21,6 +22,7 @@ import com.dev.epicture.epicture.imgur.service.ImgurService
 class UploadFragment : GalleryFragment() {
 
     private val PICK_IMAGE = 1
+    private val CAMERA_IMAGE = 2
     private var bitmap: Bitmap? = null
     private var bitmapName: String = ""
 
@@ -29,6 +31,16 @@ class UploadFragment : GalleryFragment() {
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE)
+    }
+
+    private fun camera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            if (activity == null)
+                return
+            takePictureIntent.resolveActivity(activity?.packageManager)?.also {
+                startActivityForResult(takePictureIntent, CAMERA_IMAGE)
+            }
+        }
     }
 
     private fun resetForm() {
@@ -83,7 +95,7 @@ class UploadFragment : GalleryFragment() {
         resetForm()
     }
 
-    private fun changeBitmap(uri: Uri?) {
+    private fun changeBitmapByURI(uri: Uri?) {
         val imageView=  view?.findViewById<ImageView>(R.id.imagePreview)
         if (uri != null) {
             bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri)
@@ -96,10 +108,30 @@ class UploadFragment : GalleryFragment() {
         }
     }
 
+    private fun changeBitmapByBitmap(bitmap: Bitmap?) {
+        val imageView=  view?.findViewById<ImageView>(R.id.imagePreview)
+        if (bitmap != null) {
+            bitmapName = "cameraPicture"
+            imageView?.setImageBitmap(bitmap)
+            imageView?.setOnClickListener {
+                choose()
+            }
+            view?.findViewById<CardView>(R.id.choose_card)?.visibility = View.GONE
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PICK_IMAGE) {
-            val imageUri = data?.data
-            changeBitmap(imageUri)
+        if (resultCode != RESULT_OK)
+            return
+        when (requestCode) {
+            PICK_IMAGE -> {
+                val imageUri = data?.data
+                changeBitmapByURI(imageUri)
+            }
+            CAMERA_IMAGE -> {
+                val imageBitmap = data?.extras?.get("data") as Bitmap
+                changeBitmapByBitmap(imageBitmap)
+            }
         }
     }
 
@@ -110,6 +142,7 @@ class UploadFragment : GalleryFragment() {
         val fragView = inflater.inflate(R.layout.fragment_upload, container, false)
         val chooseButton = fragView?.findViewById<Button>(R.id.buttonChoose)
         chooseButton?.setOnClickListener {
+            //camera()
             choose()
         }
         val uploadButton = fragView?.findViewById<Button>(R.id.buttonUpload)

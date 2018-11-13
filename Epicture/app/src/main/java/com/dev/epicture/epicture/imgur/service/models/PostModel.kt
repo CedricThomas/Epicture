@@ -8,10 +8,12 @@ enum class PostType {
 }
 
 data class PostModel(
-    val viewNb: Int,
-    val upNb: Int,
-    val downNb: Int,
-    val previewUrl: String,
+    val title: String?,
+    val viewNb: Int?,
+    val upNb: Int?,
+    val downNb: Int?,
+    val previewUrl: String?,
     val fullElement: JsonElement,
-    val type : PostType
+    val type : PostType,
+    var selected: Boolean
 )

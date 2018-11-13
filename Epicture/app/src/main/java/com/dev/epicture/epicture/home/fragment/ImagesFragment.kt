@@ -21,7 +21,7 @@ class ImagesFragment : GalleryFragment() {
     private var images: ArrayList<ImageModel> = ArrayList()
     private var loading: Boolean = false
     private var page: Int = 0
-    private var all = true
+    private var selectAllStatus = true
 
     // activate / deactivate ActionBar
     private fun setActionsVisibility(status: Boolean)  {
@@ -30,7 +30,7 @@ class ImagesFragment : GalleryFragment() {
         menuManager.refresh.isVisible = !status
     }
 
-    // Select all Activation
+    // Select selectAllStatus Activation
     private fun activateSelectAll(recyclerView: RecyclerView) {
         // Reload activation
         menuManager.selectAll.isVisible = true
@@ -38,8 +38,8 @@ class ImagesFragment : GalleryFragment() {
             val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
             adapter.selecting = true
             for (elem in images)
-                elem.selected = all
-            all = !all
+                elem.selected = selectAllStatus
+            selectAllStatus = !selectAllStatus
             setActionsVisibility(true)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
@@ -51,17 +51,16 @@ class ImagesFragment : GalleryFragment() {
         // Reload activation
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
-            all = false
+            selectAllStatus = false
             loadActivePages(recyclerView)
             return@setOnMenuItemClickListener true
         }
     }
 
     // Delete activation
-    private fun activateDelete(recyclerView: RecyclerView) {
+    private fun activateDelete() {
         menuManager.delete.setOnMenuItemClickListener {
-            all = false
-            val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
+            selectAllStatus = false
             val removed = adapter.getSelection()
             for (elem in removed)
                 images.remove(elem)
@@ -74,9 +73,8 @@ class ImagesFragment : GalleryFragment() {
     }
 
     // Cancel activation
-    private fun activateCancelSelection(recyclerView: RecyclerView) {
+    private fun activateCancelSelection() {
         menuManager.cancel.setOnMenuItemClickListener {
-            val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
             val selected = adapter.getSelection()
             selected.forEach { image ->
                 image.selected = false
@@ -127,8 +125,8 @@ class ImagesFragment : GalleryFragment() {
 
         loadActivePages(recyclerView)
         activateReload(recyclerView)
-        activateDelete(recyclerView)
-        activateCancelSelection(recyclerView)
+        activateDelete()
+        activateCancelSelection()
         activateInfiniteScroll(recyclerView)
         activateSelectAll(recyclerView)
 
