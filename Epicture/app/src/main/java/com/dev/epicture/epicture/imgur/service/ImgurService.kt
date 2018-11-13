@@ -20,6 +20,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Base64
 import com.dev.epicture.epicture.MyApplication
+import com.dev.epicture.epicture.imgur.service.models.AccountModel
 import java.io.ByteArrayOutputStream
 import kotlin.concurrent.thread
 
@@ -161,6 +162,51 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
+    // Get Favorite
+    fun getFavorite(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("account")
+            .addPathSegment(informations["account_username"]!!)
+            .addPathSegment("favorites")
+            .addPathSegment(page)
+            .build()
+
+        val request = GETBuilder(url)
+        val customResolve = { res: JsonElement ->
+            val type = object : TypeToken<BasicImgurResponseModel<ArrayList<JsonElement>>>() {}.type
+            val data = Gson().fromJson<BasicImgurResponseModel<ArrayList<JsonElement>>>(res.toString(), type)
+            resolve(data)
+        }
+        asyncLaunch(request!!, customResolve, reject)
+    }
+
+    fun getAccount(resolve: (BasicImgurResponseModel<AccountModel>) -> Unit, reject: (Exception) -> Unit, name: String) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("account")
+            .addPathSegment(name)
+            .build()
+
+        val request = GETBuilder(url)
+        val customResolve = { res: JsonElement ->
+            val type = object : TypeToken<BasicImgurResponseModel<AccountModel>>() {}.type
+            val data = Gson().fromJson<BasicImgurResponseModel<AccountModel>>(res.toString(), type)
+            resolve(data)
+        }
+        asyncLaunch(request!!, customResolve, reject)
+    }
+
     fun deleteImage(resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit, id: String) {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -254,6 +300,7 @@ object ImgurService {
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val data = Gson().fromJson<JsonElement>(response.body()!!.string()!!, JsonElement::class.java)
+                    Log.i("Ok", data.toString())
                     val dataModel = data.asJsonObject
                     if (dataModel.get("success").asBoolean)
                         return resolve(data)

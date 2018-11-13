@@ -12,15 +12,15 @@ android:background="@android:color/white">
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:id="@+id/imageView"
+                android:id="@+id/preview"
                 android:contentDescription="@string/GalleryItemDescription"
         />
         <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp" android:id="@+id/textView"
+                android:layout_height="40dp" android:id="@+id/title"
                 android:layout_marginRight="0dp"
                 android:layout_marginEnd="0dp"
-                android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/imageView"
+                android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/preview"
                 android:layout_alignParentStart="true" android:layout_marginLeft="0dp" android:layout_marginStart="0dp"
                 android:layout_alignParentLeft="true" android:gravity="center_vertical|center"
                 android:textColor="@color/colorSecondary" android:background="@color/colorShadow"
@@ -36,7 +36,7 @@ android:background="@android:color/white">
                 android:textOff=""
                 android:textOn="" android:layout_alignParentEnd="true" android:layout_alignParentRight="true"
                 android:layout_marginRight="0dp" android:layout_marginEnd="0dp" android:layout_marginBottom="0dp"
-                android:layout_alignBottom="@+id/imageView" android:visibility="invisible"/>
+                android:layout_alignBottom="@+id/preview" android:visibility="invisible"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

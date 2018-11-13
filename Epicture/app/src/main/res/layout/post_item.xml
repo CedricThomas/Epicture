@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@android:color/white">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@color/colorAccent">
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="188dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/preview"
+                android:contentDescription="@string/GalleryItemDescription"
+                android:layout_alignParentStart="true" android:layout_alignParentTop="true"
+                android:layout_marginTop="70dp" android:layout_marginStart="0dp" android:layout_marginLeft="0dp"
+                android:layout_alignParentLeft="true" android:background="@drawable/ic_launcher_background"/>
+
+        <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="3dp" android:layout_alignParentLeft="true" android:id="@+id/profil"
+                android:layout_marginLeft="3dp" android:layout_marginTop="3dp" android:layout_alignParentTop="true"
+                android:background="@mipmap/ic_launcher_round"/>
+        <TextView
+                android:text="@string/title"
+                android:layout_width="312dp"
+                android:layout_height="66dp"
+                android:layout_alignParentTop="true" android:id="@+id/title" android:layout_alignParentStart="true"
+                android:layout_marginLeft="72dp" android:layout_marginStart="72dp"
+                android:layout_alignParentLeft="true" android:layout_marginTop="0dp"
+                android:gravity="center_vertical|center_horizontal" android:textColor="@color/colorSecondary"
+                android:textSize="24sp"/>
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/up" android:layout_marginTop="3dp" android:layout_below="@+id/preview"
+                android:layout_marginStart="5dp" android:layout_marginLeft="10dp"
+                android:layout_alignLeft="@+id/preview" android:layout_alignStart="@+id/preview"
+                android:visibility="visible" android:background="@drawable/ic_arrow_up"/>
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/down"
+                android:layout_toEndOf="@+id/up_text" android:layout_toRightOf="@+id/up_text"
+                android:layout_marginLeft="30dp" android:layout_marginStart="30dp" android:layout_alignTop="@+id/up"
+                android:layout_marginTop="0dp" android:visibility="visible"
+                android:background="@drawable/ic_arrow_drop_down"/>
+        <TextView
+                android:text="0"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/up_text" android:layout_alignTop="@+id/up"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/up"
+                android:layout_toRightOf="@+id/up" android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp" android:gravity="center_vertical|center_horizontal"/>
+        <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/view"
+                android:layout_toEndOf="@+id/down_text" android:layout_toRightOf="@+id/down_text"
+                android:layout_marginLeft="30dp" android:layout_marginStart="30dp" android:layout_alignTop="@+id/up"
+                android:layout_marginTop="0dp" android:visibility="visible"
+                android:background="@drawable/ic_eye_primary"/>
+        <TextView
+                android:text="0"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/view_text" android:layout_alignTop="@+id/up"
+                android:layout_marginTop="0dp"
+                android:layout_toEndOf="@+id/view"
+                android:layout_toRightOf="@+id/view" android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp" android:gravity="center_vertical|center_horizontal"/>
+        <TextView
+                android:text="0"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/down_text" android:layout_alignTop="@+id/up"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginStart="6dp" android:layout_toEndOf="@+id/down"
+                android:layout_toRightOf="@+id/down" android:gravity="center"/>
+        <ToggleButton
+                android:id="@+id/favorite_toggle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/button_favorite_accent"
+                android:checked="false"
+                android:text=""
+                android:textOff=""
+                android:textOn=""
+                android:visibility="visible"
+                android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/preview"
+                android:layout_alignRight="@+id/preview" android:layout_marginRight="0dp"
+                android:layout_marginEnd="0dp" android:layout_alignEnd="@+id/preview"/>
+        <Button
+                android:id="@+id/delete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_delete_secondary"
+                android:checked="false"
+                android:text=""
+                android:textOff=""
+                android:textOn=""
+                android:visibility="visible"
+                android:layout_marginRight="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_alignTop="@+id/preview" android:layout_marginTop="0dp"
+                android:layout_alignRight="@+id/preview" android:layout_alignEnd="@+id/preview"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
