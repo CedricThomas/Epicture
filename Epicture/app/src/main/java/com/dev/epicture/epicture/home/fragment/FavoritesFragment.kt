@@ -46,7 +46,6 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-
     // Delete activation
     private fun activateDelete() {
         menuManager.delete.setOnMenuItemClickListener {
@@ -156,8 +155,7 @@ class FavoritesFragment : GalleryFragment() {
                 0,
                 data.images?.get(0)?.link,
                 element,
-                PostType.Album,
-                false
+                PostType.Album
             )
         } else {
             val data : GalleryImageModel = gson.fromJson(element, GalleryImageModel::class.java)
@@ -169,8 +167,7 @@ class FavoritesFragment : GalleryFragment() {
                 0,
                 data.link,
                 element,
-                PostType.Album,
-                false
+                PostType.Album
             )
         }
     }

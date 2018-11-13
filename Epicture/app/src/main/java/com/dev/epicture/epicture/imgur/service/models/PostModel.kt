@@ -14,6 +14,5 @@ data class PostModel(
     val downNb: Int?,
     val previewUrl: String?,
     val fullElement: JsonElement,
-    val type : PostType,
-    var selected: Boolean
-)
+    val type : PostType
+) : SelectableModel()
