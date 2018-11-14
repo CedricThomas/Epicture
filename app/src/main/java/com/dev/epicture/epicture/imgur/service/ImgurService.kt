@@ -223,6 +223,51 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
+    fun unfavoriteImage(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        id: String
+    ) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("image")
+            .addPathSegment(id)
+            .addPathSegment("favorite")
+            .build()
+
+
+        val request = DELETEBuilder(url)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
+    fun favoriteImage(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        id: String
+    ) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("image")
+            .addPathSegment(id)
+            .addPathSegment("favorite")
+            .build()
+
+        val body = MultipartBody.Builder().build()
+
+        val request = POSTBuilder(url, body)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
     fun uploadImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
