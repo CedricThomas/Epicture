@@ -43,15 +43,12 @@ class GalleryFragmentItemAdapter(
         })
     }
 
-
-    // Data Holder /!\ Do not use for status storage
     inner class ImageHolder (view: View) : SelectableHolder(view) {
         override val selectToggle: ToggleButton = view.gallery_image_select_toggle
         val imageView: ImageView = view.gallery_image_preview
         val textView: TextView = view.gallery_image_title
     }
 
-    // Data Holder /!\ Do not use for status storage
     inner class AnimatedHolder(view: View) : SelectableHolder(view) {
         override val selectToggle: ToggleButton = view.gallery_animated_select_toggle
         val videoView: VideoView = view.gallery_animated_preview

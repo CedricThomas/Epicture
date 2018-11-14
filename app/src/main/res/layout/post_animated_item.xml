@@ -8,11 +8,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:background="@color/colorAccent">
 
+        <VideoView
+                android:layout_width="match_parent"
+                android:layout_height="188dp"
+                android:id="@+id/post_animated_preview"
+                android:contentDescription="@string/GalleryItemDescription"
+                android:layout_alignParentStart="true" android:layout_alignParentTop="true"
+                android:layout_marginTop="70dp" android:layout_marginStart="0dp" android:layout_marginLeft="0dp"
+                android:layout_alignParentLeft="true" android:background="@drawable/ic_launcher_background"/>
         <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="188dp"
                 android:scaleType="centerCrop"
-                android:id="@+id/post_animated_preview"
+                android:id="@+id/post_animated_placeholder"
                 android:contentDescription="@string/GalleryItemDescription"
                 android:layout_alignParentStart="true" android:layout_alignParentTop="true"
                 android:layout_marginTop="70dp" android:layout_marginStart="0dp" android:layout_marginLeft="0dp"
@@ -37,9 +45,9 @@
         <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:id="@+id/post_animated_up" android:layout_marginTop="3dp" android:layout_below="@+id/post_animated_preview"
+                android:id="@+id/post_animated_up" android:layout_marginTop="3dp" android:layout_below="@+id/post_animated_placeholder"
                 android:layout_marginStart="5dp" android:layout_marginLeft="10dp"
-                android:layout_alignLeft="@+id/post_animated_preview" android:layout_alignStart="@+id/post_animated_preview"
+                android:layout_alignLeft="@+id/post_animated_placeholder" android:layout_alignStart="@+id/post_animated_placeholder"
                 android:visibility="visible" android:background="@drawable/ic_arrow_up"/>
         <ImageView
                 android:layout_width="32dp"
@@ -96,9 +104,9 @@
                 android:textOff=""
                 android:textOn=""
                 android:visibility="visible"
-                android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/post_animated_preview"
-                android:layout_alignRight="@+id/post_animated_preview" android:layout_marginRight="0dp"
-                android:layout_marginEnd="0dp" android:layout_alignEnd="@+id/post_animated_preview"/>
+                android:layout_marginBottom="0dp" android:layout_alignBottom="@+id/post_animated_placeholder"
+                android:layout_alignRight="@+id/post_animated_placeholder" android:layout_marginRight="0dp"
+                android:layout_marginEnd="0dp" android:layout_alignEnd="@+id/post_animated_placeholder"/>
         <ToggleButton
                 android:id="@+id/post_animated_select_toggle"
                 android:text=""
@@ -110,7 +118,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" android:layout_marginEnd="1dp"
                 android:layout_marginRight="1dp"
-                android:layout_alignTop="@+id/post_animated_preview" android:layout_marginTop="0dp"/>
+                android:layout_alignTop="@+id/post_animated_placeholder" android:layout_marginTop="0dp"/>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

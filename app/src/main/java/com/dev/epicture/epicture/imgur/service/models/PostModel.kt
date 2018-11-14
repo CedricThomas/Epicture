@@ -13,6 +13,7 @@ data class PostModel(
     val upNb: Int?,
     val downNb: Int?,
     val previewUrl: String?,
+    val mp4Url: String?,
     val fullElement: JsonElement,
     val type : PostType
 ) : SelectableModel()

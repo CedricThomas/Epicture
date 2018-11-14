@@ -152,6 +152,7 @@ class FavoritesFragment : GalleryFragment() {
                 0,
                 0,
                 data.images?.get(0)?.link,
+                data.images?.get(0)?.mp4,
                 element,
                 PostType.Album
             )
@@ -164,6 +165,7 @@ class FavoritesFragment : GalleryFragment() {
                 0,
                 0,
                 data.link,
+                data.mp4,
                 element,
                 PostType.Album
             )
