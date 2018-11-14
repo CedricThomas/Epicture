@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.Adapter.ImagesFragmentItemAdapter
+import com.dev.epicture.epicture.home.Adapter.GalleryFragmentItemAdapter
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.dev.epicture.epicture.imgur.service.models.ImageModel
 
@@ -17,7 +18,7 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 class ImagesFragment : GalleryFragment() {
 
     private lateinit var fragView: View
-    private lateinit var adapter: ImagesFragmentItemAdapter
+    private lateinit var adapter: GalleryFragmentItemAdapter
     private var images: ArrayList<ImageModel> = ArrayList()
     private var loading: Boolean = false
     private var page: Int = 0
@@ -35,7 +36,7 @@ class ImagesFragment : GalleryFragment() {
         // Reload activation
         menuManager.selectAll.isVisible = true
         menuManager.selectAll.setOnMenuItemClickListener {
-            val adapter = recyclerView.adapter as ImagesFragmentItemAdapter
+            val adapter = recyclerView.adapter as GalleryFragmentItemAdapter
             adapter.selecting = true
             for (elem in images)
                 elem.selected = selectAllStatus
@@ -110,7 +111,7 @@ class ImagesFragment : GalleryFragment() {
 
     private fun createRecyclerView() {
 
-        adapter = ImagesFragmentItemAdapter(images, context!!) { adapter, model ->
+        adapter = GalleryFragmentItemAdapter(images, context!!) { adapter, model ->
             if (!adapter.selecting) {
                 model.selected = true
                 adapter.selecting = true

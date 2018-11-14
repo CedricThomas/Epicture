@@ -1,28 +1,16 @@
 package com.dev.epicture.epicture.home.Adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.BounceInterpolator
-import android.view.animation.ScaleAnimation
-import android.widget.CompoundButton
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.ToggleButton
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.imgur.service.GlideApp
-import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import com.dev.epicture.epicture.imgur.service.models.PostModel
 import com.dev.epicture.epicture.imgur.service.models.SelectableModel
-import kotlinx.android.synthetic.main.post_item.view.*
+import kotlinx.android.synthetic.main.post_image_item.view.*
 
 class FavoritesFragmentItemAdapter(
     imagesFull: ArrayList<PostModel>,
@@ -40,20 +28,20 @@ class FavoritesFragmentItemAdapter(
 
     // Data Holder /!\ Do not use for status storage
     inner class ImageHolder (view: View) : SelectableAdapter.SelectableHolder(view) {
-        val preview = view.preview!!
-        override val selectToggle = view.select_toggle!!
-        val favoriteToggle = view.favorite_toggle!!
-        val title = view.title!!
-        val views = view.view_text!!
-        val up = view.up_text!!
-        val down = view.down_text!!
+//        val preview = view.preview!!
+        override val selectToggle = view.post_image_favorite_toggle!!
+//        val favoriteToggle = view.favorite_toggle!!
+//        val title = view.title!!
+//        val views = view.view_text!!
+//        val up = view.up_text!!
+//        val down = view.down_text!!
     }
 
     // Configure Image Holder
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ImageHolder {
-        val inflatedView = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false)
+        val inflatedView = LayoutInflater.from(context).inflate(R.layout.post_image_item, parent, false)
         val holder = ImageHolder(inflatedView)
-        holder.favoriteToggle.visibility = View.INVISIBLE
+//        holder.favoriteToggle.visibility = View.INVISIBLE
         return holder
     }
 
@@ -62,47 +50,47 @@ class FavoritesFragmentItemAdapter(
     }
 
     fun getSelection(): ArrayList<PostModel> {
-        if (!selecting)
+//        if (!selecting)
             return ArrayList()
-        return ArrayList(images.filter { it ->
-            it.selected
-        })
+//        return ArrayList(images.filter { it ->
+//            it.selected
+//        })
     }
 
     private fun loadDataInView(holder: ImageHolder, model: PostModel) {
-        holder.up.text = model.upNb.toString()
-        holder.down.text = model.downNb.toString()
-        holder.views.text = model.viewNb.toString()
-        holder.title.text = model.title
+//        holder.up.text = model.upNb.toString()
+//        holder.down.text = model.downNb.toString()
+//        holder.views.text = model.viewNb.toString()
+//        holder.title.text = model.title
     }
 
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
 
-        val holder : ImageHolder = rawHolder as ImageHolder
-
-        try {
-            // Load image in view
-            GlideApp
-                .with(context)
-                .load(images[position].previewUrl)
-                .placeholder(R.drawable.loader)
-                .thumbnail(Glide.with(context).load(R.drawable.loader))
-                .into(DrawableImageViewTarget(holder.preview))
-
-            // Load date in the view (views, up, down)
-            loadDataInView(holder, images[position])
-
-            //Activate Selection
-            activateSelect(holder.preview, rawHolder, images[position] as SelectableModel) {status ->
-                if (status)
-                    holder.preview.setColorFilter(Color.rgb(150, 150, 150), PorterDuff.Mode.ADD)
-                else
-                    holder.preview.colorFilter = null
-            }
-
-        } catch (e: Exception) {
-            Log.e("ImageBindError", e.message)
-        }
+//        val holder : ImageHolder = rawHolder as ImageHolder
+//
+//        try {
+//            // Load image in view
+//            GlideApp
+//                .with(context)
+//                .load(images[position].previewUrl)
+//                .placeholder(R.drawable.loader)
+//                .thumbnail(Glide.with(context).load(R.drawable.loader))
+//                .into(DrawableImageViewTarget(holder.preview))
+//
+//            // Load date in the view (views, up, down)
+//            loadDataInView(holder, images[position])
+//
+//            //Activate Selection
+//            activateSelect(holder.preview, rawHolder, images[position] as SelectableModel) {status ->
+//                if (status)
+//                    holder.preview.setColorFilter(Color.rgb(150, 150, 150), PorterDuff.Mode.ADD)
+//                else
+//                    holder.preview.colorFilter = null
+//            }
+//
+//        } catch (e: Exception) {
+//            Log.e("ImageBindError", e.message)
+//        }
     }
 
     override fun getFilter(): Filter {

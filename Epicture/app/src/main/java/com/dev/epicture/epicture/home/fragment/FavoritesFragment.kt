@@ -1,7 +1,6 @@
 package com.dev.epicture.epicture.home.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.home.Adapter.FavoritesFragmentItemAdapter
-import com.dev.epicture.epicture.home.Adapter.ImagesFragmentItemAdapter
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.dev.epicture.epicture.imgur.service.models.AlbumModel
 import com.dev.epicture.epicture.imgur.service.models.GalleryImageModel
