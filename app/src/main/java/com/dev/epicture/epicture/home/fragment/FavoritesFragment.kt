@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.Adapter.FavoritesFragmentItemAdapter
+import com.dev.epicture.epicture.home.adapter.FavoritesFragmentItemAdapter
 import com.dev.epicture.epicture.imgur.service.ImgurService
 import com.dev.epicture.epicture.imgur.service.models.AlbumModel
 import com.dev.epicture.epicture.imgur.service.models.GalleryImageModel

@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.Adapter
+package com.dev.epicture.epicture.home.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -18,7 +18,6 @@ import com.dev.epicture.epicture.imgur.service.models.ImageModel
 import com.dev.epicture.epicture.imgur.service.models.SelectableModel
 import kotlinx.android.synthetic.main.gallery_animated_item.view.*
 import kotlinx.android.synthetic.main.gallery_image_item.view.*
-import android.R.raw
 
 
 class GalleryFragmentItemAdapter(

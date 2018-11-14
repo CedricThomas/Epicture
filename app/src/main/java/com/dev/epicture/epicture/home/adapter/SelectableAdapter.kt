@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.Adapter
+package com.dev.epicture.epicture.home.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
