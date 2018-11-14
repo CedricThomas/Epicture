@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
@@ -100,8 +101,23 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private val mOnDrawerItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
-
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         when (item.itemId) {
+            R.id.draw_images -> {
+                setFragment(ImagesFragment())
+                drawer.closeDrawers()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.draw_favorite -> {
+                setFragment(FavoritesFragment())
+                drawer.closeDrawers()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.draw_upload -> {
+                setFragment(UploadFragment())
+                drawer.closeDrawers()
+                return@OnNavigationItemSelectedListener true
+            }
             R.id.draw_logout -> {
                 ImgurService.deleteCredentials()
                 val intent = Intent(this, LoginActivity::class.java)
