@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.imgur.service.models
+package com.dev.epicture.epicture.services.imgur.models
 
 data class ImageModel(
     val id : String?,

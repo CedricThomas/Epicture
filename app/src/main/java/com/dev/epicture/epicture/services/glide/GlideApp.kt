@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.imgur.service
+package com.dev.epicture.epicture.services.glide
 
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.module.AppGlideModule

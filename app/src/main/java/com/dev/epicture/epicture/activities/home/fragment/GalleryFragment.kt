@@ -1,11 +1,11 @@
-package com.dev.epicture.epicture.home.fragment
+package com.dev.epicture.epicture.activities.home.fragment
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
-import com.dev.epicture.epicture.home.HomeActivity
+import com.dev.epicture.epicture.activities.home.HomeActivity
 
-import com.dev.epicture.epicture.home.HomeActivity.ActionMenuManager
+import com.dev.epicture.epicture.activities.home.HomeActivity.ActionMenuManager
 
 open class GalleryFragment : Fragment() {
 

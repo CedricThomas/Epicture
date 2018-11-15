@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.adapter
+package com.dev.epicture.epicture.activities.home.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -13,9 +13,9 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.imgur.service.GlideApp
-import com.dev.epicture.epicture.imgur.service.models.ImageModel
-import com.dev.epicture.epicture.imgur.service.models.SelectableModel
+import com.dev.epicture.epicture.services.glide.GlideApp
+import com.dev.epicture.epicture.services.imgur.models.ImageModel
+import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.gallery_animated_item.view.*
 import kotlinx.android.synthetic.main.gallery_image_item.view.*
 
@@ -98,7 +98,7 @@ class GalleryFragmentItemAdapter(
             }
 
             //Activate Selection
-            activateSelect(holder.imageView, rawHolder, images[position] as SelectableModel) {status ->
+            activateSelect(holder.imageView, rawHolder, images[position] as SelectableModel) { status ->
                 if (status)
                     holder.imageView.setColorFilter(Color.rgb(150, 150, 150), PorterDuff.Mode.ADD)
                 else
@@ -135,12 +135,11 @@ class GalleryFragmentItemAdapter(
             }
 
             //Activate Selection
-            activateSelect(holder.placeholder, rawHolder, images[position] as SelectableModel) {status ->
-                if (status) {
+            activateSelect(holder.placeholder, rawHolder, images[position] as SelectableModel) { status ->
+                if (status)
                     holder.videoView.setBackgroundColor(Color.argb(150, 255, 255, 255))
-                } else {
+                else
                     holder.videoView.setBackgroundColor(0)
-                }
             }
 
         } catch (e: Exception) {
@@ -149,6 +148,7 @@ class GalleryFragmentItemAdapter(
     }
 
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
+        Log.i(position.toString(), images[position].selected.toString())
         if (getItemViewType(position) == animatedType)
             bindAnimatedHolder(rawHolder, position)
         else
@@ -163,8 +163,9 @@ class GalleryFragmentItemAdapter(
                 images = if (charString.isEmpty()) {
                     imagesFull
                 } else {
+                    val base = ArrayList(imagesFull.filter { it.title != null })
                     val filteredList = ArrayList<ImageModel>()
-                    for (row in imagesFull)
+                    for (row in base)
                         if (row.description?.contains(charString)!! || row.title?.contains(charString)!!)
                             filteredList.add(row)
                     filteredList

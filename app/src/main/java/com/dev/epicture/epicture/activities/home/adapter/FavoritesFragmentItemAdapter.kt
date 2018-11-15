@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.adapter
+package com.dev.epicture.epicture.activities.home.adapter
 
 import android.content.Context
 import android.graphics.Color
@@ -13,11 +13,9 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.imgur.service.GlideApp
-import com.dev.epicture.epicture.imgur.service.models.PostModel
-import com.dev.epicture.epicture.imgur.service.models.SelectableModel
-import kotlinx.android.synthetic.main.gallery_animated_item.view.*
-import kotlinx.android.synthetic.main.gallery_image_item.view.*
+import com.dev.epicture.epicture.services.glide.GlideApp
+import com.dev.epicture.epicture.services.imgur.models.PostModel
+import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.post_animated_item.view.*
 import kotlinx.android.synthetic.main.post_image_item.view.*
 
@@ -45,20 +43,30 @@ class FavoritesFragmentItemAdapter(
         })
     }
 
-    inner class ImageHolder (view: View) : SelectableHolder(view) {
-        override val selectToggle: ToggleButton = view.post_image_select_toggle
-        val imageView: ImageView = view.post_image_preview
-        val titleView: TextView = view.post_image_title
-        val viewsView: TextView = view.post_image_view_text
-        val upView: TextView = view.post_image_up_text
-        val downView: TextView = view.post_image_down_text
+    abstract inner class PostHolder(view: View) : SelectableHolder(view) {
+        abstract val titleView: TextView
+        abstract val viewsView: TextView
+        abstract val upView: TextView
+        abstract val downView: TextView
     }
 
-    inner class AnimatedHolder(view: View) : SelectableHolder(view) {
+    inner class ImageHolder (view: View) : PostHolder(view) {
+        override val selectToggle: ToggleButton = view.post_image_select_toggle
+        override val titleView: TextView = view.post_image_title
+        override val viewsView: TextView = view.post_image_view_text
+        override val upView: TextView = view.post_image_up_text
+        override val downView: TextView = view.post_image_down_text
+        val imageView: ImageView = view.post_image_preview
+    }
+
+    inner class AnimatedHolder(view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_animated_select_toggle
+        override val titleView: TextView = view.post_animated_title
+        override val viewsView: TextView = view.post_animated_view_text
+        override val upView: TextView = view.post_animated_up_text
+        override val downView: TextView = view.post_animated_down_text
         val videoView: VideoView = view.post_animated_preview
         val placeholder: ImageView = view.post_animated_placeholder
-        val titleView: TextView = view.post_animated_title
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -71,14 +79,35 @@ class FavoritesFragmentItemAdapter(
 
     // Configure Image Holder
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): SelectableHolder {
-        return if (type == animatedType)
-            AnimatedHolder(LayoutInflater.from(context).inflate(R.layout.post_animated_item, parent, false))
-        else
-            ImageHolder(LayoutInflater.from(context).inflate(R.layout.post_image_item, parent, false))
+        return if (type == animatedType) {
+            val view = LayoutInflater.from(context).inflate(R.layout.post_animated_item, parent, false)
+            view.findViewById<ToggleButton>(R.id.post_animated_favorite_toggle).visibility = View.INVISIBLE
+            AnimatedHolder(view)
+        } else {
+            val view = LayoutInflater.from(context).inflate(R.layout.post_image_item, parent, false)
+            view.findViewById<ToggleButton>(R.id.post_image_favorite_toggle).visibility = View.INVISIBLE
+            ImageHolder(view)
+        }
     }
 
     override fun getItemCount(): Int {
         return images.size
+    }
+
+    private fun bindPostHolder(holder: PostHolder, position: Int) {
+
+        // Activate title
+        if (images[position].title != null && !images[position].title?.isEmpty()!!) {
+            holder.titleView.text = images[position].title
+            holder.titleView.visibility = View.VISIBLE
+        } else {
+            holder.titleView.visibility = View.INVISIBLE
+        }
+
+        // Activate Stats print
+        holder.downView.text = images[position].downNb.toString()
+        holder.upView.text = images[position].upNb.toString()
+        holder.viewsView.text = images[position].viewNb.toString()
     }
 
     private fun bindImageHolder(rawHolder: SelectableHolder, position: Int) {
@@ -95,26 +124,15 @@ class FavoritesFragmentItemAdapter(
                 .thumbnail(Glide.with(context).load(R.drawable.loader))
                 .into(imageViewTarget)
 
-            // Activate title
-            if (images[position].title != null && !images[position].title?.isEmpty()!!) {
-                holder.titleView.text = images[position].title
-                holder.titleView.visibility = View.VISIBLE
-            } else {
-                holder.titleView.visibility = View.INVISIBLE
-            }
-
-            holder.downView.text = images[position].downNb.toString()
-            holder.upView.text = images[position].upNb.toString()
-            holder.viewsView.text = images[position].viewNb.toString()
-
-
             //Activate Selection
-            activateSelect(holder.imageView, rawHolder, images[position] as SelectableModel) {status ->
+            activateSelect(holder.imageView, rawHolder, images[position] as SelectableModel) { status ->
                 if (status)
                     holder.imageView.setColorFilter(Color.rgb(150, 150, 150), PorterDuff.Mode.ADD)
                 else
                     holder.imageView.colorFilter = null
             }
+
+            bindPostHolder(holder, position)
 
         } catch (e: Exception) {
             Log.e("ImageBindError", e.message)
@@ -124,6 +142,7 @@ class FavoritesFragmentItemAdapter(
     private fun bindAnimatedHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : AnimatedHolder = rawHolder as AnimatedHolder
+
             // Load video in view
             val imageViewTarget = DrawableImageViewTarget(holder.placeholder)
             holder.placeholder.alpha = 1F
@@ -137,22 +156,16 @@ class FavoritesFragmentItemAdapter(
             }
             holder.videoView.start()
 
-            // Activate title
-            if (images[position].title != null && !images[position].title?.isEmpty()!!) {
-                holder.titleView.text = images[position].title
-                holder.titleView.visibility = View.VISIBLE
-            } else {
-                holder.titleView.visibility = View.INVISIBLE
-            }
-
             //Activate Selection
-            activateSelect(holder.placeholder, rawHolder, images[position] as SelectableModel) {status ->
+            activateSelect(holder.placeholder, rawHolder, images[position] as SelectableModel) { status ->
                 if (status) {
                     holder.videoView.setBackgroundColor(Color.argb(150, 255, 255, 255))
                 } else {
                     holder.videoView.setBackgroundColor(0)
                 }
             }
+
+            bindPostHolder(holder, position)
 
         } catch (e: Exception) {
             Log.e("VideoBindError", e.message)

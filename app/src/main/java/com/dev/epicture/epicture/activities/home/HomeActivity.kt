@@ -1,12 +1,14 @@
-package com.dev.epicture.epicture.home
+package com.dev.epicture.epicture.activities.home
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
@@ -15,19 +17,43 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.fragment.FavoritesFragment
-import com.dev.epicture.epicture.home.fragment.GalleryFragment
-import com.dev.epicture.epicture.home.fragment.ImagesFragment
-import com.dev.epicture.epicture.home.fragment.UploadFragment
-import com.dev.epicture.epicture.imgur.service.ImgurService
-import com.dev.epicture.epicture.login.LoginActivity
+import com.dev.epicture.epicture.activities.home.fragment.FavoritesFragment
+import com.dev.epicture.epicture.activities.home.fragment.GalleryFragment
+import com.dev.epicture.epicture.activities.home.fragment.ImagesFragment
+import com.dev.epicture.epicture.activities.login.LoginActivity
+import com.dev.epicture.epicture.services.imgur.ImgurService
+import com.dev.epicture.epicture.services.upload.UploadService
 import kotlinx.android.synthetic.main.activity_home.*
 
 
 class HomeActivity : AppCompatActivity() {
 
+    private var animation = false
+    var addMenu: Boolean = false
+        set(value) {
+            if (value == addMenu || animation)
+                return
+            animation = true
+            if (addMenu) {
+                fade(fab_1, fab.height + 5F, 0.0F) {
+                    animation = false
+                }
+                fade(fab_2, 2 * (fab.height + 5F), 0.0F) {
+                    animation = false
+                }
+            } else {
+                fade(fab_1, -fab.height - 5F, 1.0F) {
+                    animation = false
+                }
+                fade(fab_2, 2 * (-fab.height - 5F), 1.0F) {
+                    animation = false
+                }
+            }
+            field = value
+        }
     lateinit var actionMenu : Menu
     private lateinit var searchView: SearchView
 
@@ -92,10 +118,6 @@ class HomeActivity : AppCompatActivity() {
                 setFragment(FavoritesFragment())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_upload -> {
-                setFragment(UploadFragment())
-                return@OnNavigationItemSelectedListener true
-            }
         }
         false
     }
@@ -110,11 +132,6 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.draw_favorite -> {
                 setFragment(FavoritesFragment())
-                drawer.closeDrawers()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.draw_upload -> {
-                setFragment(UploadFragment())
                 drawer.closeDrawers()
                 return@OnNavigationItemSelectedListener true
             }
@@ -145,6 +162,26 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+    private fun fade(view: View?, dist: Float, alpha: Float, onAnimationEnd: () -> Unit) {
+        view?.animate()
+            ?.translationYBy(dist)
+            ?.alpha(alpha)
+            ?.setDuration(300)
+            ?.setListener(object : AnimatorListenerAdapter() {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    onAnimationEnd()
+                }
+            })
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (addMenu)
+            addMenu = !addMenu
+        return super.dispatchTouchEvent(ev)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -152,13 +189,21 @@ class HomeActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
         nav_view.setNavigationItemSelectedListener(mOnDrawerItemSelectedListener)
+
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_secondary)
         }
 
+        fab.setOnClickListener {
+            addMenu = !addMenu
+        }
+        fab_1.setOnClickListener { UploadService.choose(this) }
+        fab_2.setOnClickListener { UploadService.camera(this) }
     }
 
     override fun onBackPressed() {
@@ -167,6 +212,10 @@ class HomeActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        UploadService.onActivityResult(this, requestCode, resultCode, data)
     }
 
 }

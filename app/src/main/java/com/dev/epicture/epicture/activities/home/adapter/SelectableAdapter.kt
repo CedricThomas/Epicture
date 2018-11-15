@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.adapter
+package com.dev.epicture.epicture.activities.home.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -7,7 +7,7 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.ScaleAnimation
 import android.widget.CompoundButton
 import android.widget.ToggleButton
-import com.dev.epicture.epicture.imgur.service.models.SelectableModel
+import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 
 abstract class SelectableAdapter(
     private val selectActivator: (SelectableAdapter, SelectableModel) -> Boolean
@@ -23,7 +23,6 @@ abstract class SelectableAdapter(
 
         // lambda to toogle selection
         val toggle = { status: Boolean ->
-
             // Set tile selection
             model.selected = status
             holder.selectToggle.isChecked = status

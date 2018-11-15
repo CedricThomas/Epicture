@@ -6,7 +6,7 @@
     <color name="colorSecondary">#ffffff</color>
     <color name="colorPrimary">#313333</color>
     <color name="colorPrimaryDark">#313333</color>
-    <color name="colorAccent">#eb823c</color>
-    <color name="colorAccentTransparent">#afeb823c</color>
+    <color name="colorAccent">#00e676</color>
+    <color name="colorAccentTransparent">#af00e676</color>
     <color name="colorShadow">#7d000000</color>
 </resources>

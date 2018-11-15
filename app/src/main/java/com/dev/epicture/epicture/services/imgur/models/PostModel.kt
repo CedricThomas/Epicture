@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.imgur.service.models
+package com.dev.epicture.epicture.services.imgur.models
 
 import com.google.gson.JsonElement
 
@@ -8,6 +8,7 @@ enum class PostType {
 }
 
 data class PostModel(
+    val id: String?,
     val title: String?,
     val viewNb: Int?,
     val upNb: Int?,
@@ -15,5 +16,6 @@ data class PostModel(
     val previewUrl: String?,
     val mp4Url: String?,
     val fullElement: JsonElement,
-    val type : PostType
+    val type : PostType,
+    val is_album: Boolean
 ) : SelectableModel()

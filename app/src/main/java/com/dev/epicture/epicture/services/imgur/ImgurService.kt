@@ -1,12 +1,11 @@
-package com.dev.epicture.epicture.imgur.service
+package com.dev.epicture.epicture.services.imgur
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.content.ContextCompat.startActivity
-import android.util.Log
-import com.dev.epicture.epicture.imgur.service.models.BasicImgurResponseModel
-import com.dev.epicture.epicture.imgur.service.models.ImageModel
+import com.dev.epicture.epicture.services.imgur.models.BasicImgurResponseModel
+import com.dev.epicture.epicture.services.imgur.models.ImageModel
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
@@ -18,11 +17,9 @@ import okhttp3.HttpUrl
 import android.graphics.Bitmap
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import android.util.Base64
 import com.dev.epicture.epicture.MyApplication
-import com.dev.epicture.epicture.imgur.service.models.AccountModel
+import com.dev.epicture.epicture.services.imgur.models.AccountModel
 import java.io.ByteArrayOutputStream
-import kotlin.concurrent.thread
 
 
 object ImgurService {
@@ -223,28 +220,6 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
-    fun unfavoriteImage(
-        resolve: (JsonElement) -> Unit,
-        reject: (Exception) -> Unit,
-        id: String
-    ) {
-        if (!authenticated)
-            throw IOException("You are not connected")
-
-        val url = HttpUrl.Builder()
-            .scheme("https")
-            .host(host)
-            .addPathSegment(apiVersion)
-            .addPathSegment("image")
-            .addPathSegment(id)
-            .addPathSegment("favorite")
-            .build()
-
-
-        val request = DELETEBuilder(url)
-        asyncLaunch(request!!, resolve, reject)
-    }
-
     fun favoriteImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -262,7 +237,30 @@ object ImgurService {
             .addPathSegment("favorite")
             .build()
 
-        val body = MultipartBody.Builder().build()
+        val body = RequestBody.create(null, "")
+
+        val request = POSTBuilder(url, body)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
+    fun favoriteAlbum(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        id: String
+    ) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("album")
+            .addPathSegment(id)
+            .addPathSegment("favorite")
+            .build()
+
+        val body = RequestBody.create(null, "")
 
         val request = POSTBuilder(url, body)
         asyncLaunch(request!!, resolve, reject)
@@ -289,7 +287,9 @@ object ImgurService {
 
             val body = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("image", "image.jpg", bitmapToByteArray(image))
+                .addFormDataPart("image", "image.jpg",
+                    bitmapToByteArray(image)
+                )
                 .addFormDataPart("title", title)
                 .addFormDataPart("description", description)
                 .addFormDataPart("name", name)
@@ -345,7 +345,6 @@ object ImgurService {
             override fun onResponse(call: Call, response: Response) {
                 try {
                     val data = Gson().fromJson<JsonElement>(response.body()!!.string()!!, JsonElement::class.java)
-                    Log.i("Ok", data.toString())
                     val dataModel = data.asJsonObject
                     if (dataModel.get("success").asBoolean)
                         return resolve(data)

@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.login
+package com.dev.epicture.epicture.activities.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.view.animation.BounceInterpolator
 import android.view.animation.ScaleAnimation
 import android.widget.Button
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.HomeActivity
-import com.dev.epicture.epicture.imgur.service.ImgurService
+import com.dev.epicture.epicture.activities.home.HomeActivity
+import com.dev.epicture.epicture.services.imgur.ImgurService
 
 
 class LoginActivity : AppCompatActivity() {

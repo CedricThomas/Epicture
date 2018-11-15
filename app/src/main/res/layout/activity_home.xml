@@ -18,7 +18,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".home.HomeActivity" android:background="@color/colorPrimary">
+            tools:context=".activities.home.HomeActivity" android:background="@color/colorPrimary">
 
         <FrameLayout
                 android:id="@+id/content_frame"
@@ -55,6 +55,43 @@
 
         </FrameLayout>
 
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="0dp"
+                android:src="@android:drawable/ic_menu_upload"
+                app:backgroundTint="@color/colorAccent"
+                app:fabSize="mini" app:layout_constraintBottom_toBottomOf="@+id/fab"
+                app:layout_constraintEnd_toEndOf="@+id/fab" app:layout_constraintStart_toStartOf="@+id/fab"
+                app:layout_constraintTop_toTopOf="@+id/fab"/>
+
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="0dp"
+                android:src="@android:drawable/ic_menu_camera"
+                app:backgroundTint="@color/colorAccent"
+                app:fabSize="mini" app:layout_constraintBottom_toBottomOf="@+id/fab"
+                app:layout_constraintEnd_toEndOf="@+id/fab" app:layout_constraintStart_toStartOf="@+id/fab"
+                app:layout_constraintTop_toTopOf="@+id/fab"/>
+
+
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_add_secondary"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/contentFragment"
+                app:layout_constraintEnd_toEndOf="parent" app:fabSize="normal"/>
+
     </android.support.constraint.ConstraintLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
@@ -64,7 +101,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:menu="@menu/drawer_view" />
+            app:menu="@menu/drawer_view" >
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
 

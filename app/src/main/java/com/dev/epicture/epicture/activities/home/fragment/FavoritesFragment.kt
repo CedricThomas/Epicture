@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.fragment
+package com.dev.epicture.epicture.activities.home.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -9,12 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.adapter.FavoritesFragmentItemAdapter
-import com.dev.epicture.epicture.imgur.service.ImgurService
-import com.dev.epicture.epicture.imgur.service.models.AlbumModel
-import com.dev.epicture.epicture.imgur.service.models.GalleryImageModel
-import com.dev.epicture.epicture.imgur.service.models.PostModel
-import com.dev.epicture.epicture.imgur.service.models.PostType
+import com.dev.epicture.epicture.activities.home.adapter.FavoritesFragmentItemAdapter
+import com.dev.epicture.epicture.activities.home.decorators.ItemOffsetDecoration
+import com.dev.epicture.epicture.services.imgur.ImgurService
+import com.dev.epicture.epicture.services.imgur.models.AlbumModel
+import com.dev.epicture.epicture.services.imgur.models.GalleryImageModel
+import com.dev.epicture.epicture.services.imgur.models.PostModel
+import com.dev.epicture.epicture.services.imgur.models.PostType
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 
@@ -122,6 +123,8 @@ class FavoritesFragment : GalleryFragment() {
             true
         }
         val recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
+        val itemDecoration = ItemOffsetDecoration(5)
+        recyclerView.addItemDecoration(itemDecoration)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
@@ -147,27 +150,31 @@ class FavoritesFragment : GalleryFragment() {
             val data : AlbumModel = gson.fromJson(element, AlbumModel::class.java)
             // Album
             return PostModel(
+                data.id,
                 data.title,
-                0,
-                0,
-                0,
+                data.views,
+                data.ups,
+                data.downs,
                 data.images?.get(0)?.link,
                 data.images?.get(0)?.mp4,
                 element,
-                PostType.Album
+                PostType.Album,
+                element.asJsonObject.get("is_album").asBoolean
             )
         } else {
             val data : GalleryImageModel = gson.fromJson(element, GalleryImageModel::class.java)
             // Gallery Image
             return PostModel(
+                data.id,
                 data.title,
-                0,
-                0,
-                0,
+                data.views,
+                data.ups,
+                data.downs,
                 data.link,
                 data.mp4,
                 element,
-                PostType.Album
+                PostType.Album,
+                element.asJsonObject.get("is_album").asBoolean
             )
         }
     }
@@ -176,8 +183,9 @@ class FavoritesFragment : GalleryFragment() {
     private fun loadFavoritePage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getFavorite({ resp ->
             try {
-                for (image in resp.data)
+                for (image in resp.data) {
                     images.add(elementToPost(image))
+                }
             } catch (e : Exception) {
                 MyApplication.printMessage("Failed to load images page $page")
             }
@@ -190,6 +198,20 @@ class FavoritesFragment : GalleryFragment() {
 
     // delete select item from array
     private fun deleteFavorites(images: ArrayList<PostModel>) {
+        for (image in images) {
+            if (image.is_album)
+                ImgurService.favoriteAlbum({ it ->
+//                    Log.i("Album", it.asString)
+                }, {it ->
+//                    Log.i("Album", it.message)
+                }, image.id!!)
+            else
+                ImgurService.favoriteImage({ it ->
+//                    Log.i("Image", it.asString)
+                }, {it ->
+//                    Log.i("Image", it.message)
+                }, image.id!!)
+        }
 
     }
 

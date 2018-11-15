@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.home.fragment
+package com.dev.epicture.epicture.activities.home.fragment
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.home.adapter.GalleryFragmentItemAdapter
-import com.dev.epicture.epicture.imgur.service.ImgurService
-import com.dev.epicture.epicture.imgur.service.models.ImageModel
+import com.dev.epicture.epicture.activities.home.adapter.GalleryFragmentItemAdapter
+import com.dev.epicture.epicture.services.imgur.ImgurService
+import com.dev.epicture.epicture.services.imgur.models.ImageModel
 
 
 class ImagesFragment : GalleryFragment() {

@@ -1,4 +1,4 @@
-package com.dev.epicture.epicture.imgur.service
+package com.dev.epicture.epicture.services.imgur
 
 class Config {
 

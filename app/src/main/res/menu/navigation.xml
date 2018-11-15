@@ -17,9 +17,4 @@
             android:icon="@drawable/ic_search_primary"
             android:title="@string/title_search"/>
 
-    <item
-            android:id="@+id/navigation_upload"
-            android:icon="@drawable/ic_upload_primary"
-            android:title="@string/title_upload"/>
-
 </menu>

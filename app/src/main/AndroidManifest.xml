@@ -3,8 +3,12 @@
           package="com.dev.epicture.epicture">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera"  android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="true"/>
+
     <application
             android:name=".MyApplication"
             android:allowBackup="true"
@@ -14,26 +18,34 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-                android:name=".login.LoginActivity"
+                android:name=".activities.login.LoginActivity"
                 android:launchMode="singleTask"
-                android:screenOrientation="portrait" >
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <!-- Filter for api auth -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="oauth-intent" android:scheme="epicture.dev.com"/>
+
+                <data
+                        android:host="oauth-intent"
+                        android:scheme="epicture.dev.com"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".home.HomeActivity"
-                android:windowSoftInputMode="adjustPan"
+                android:name=".activities.home.HomeActivity"
+                android:label="@string/title_activity_gallery"
                 android:screenOrientation="portrait"
-                android:label="@string/title_activity_gallery">
+                android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity android:name=".activities.upload.UploadActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -6,10 +6,6 @@
                 android:icon="@drawable/ic_images_primary"
                 android:title="@string/title_images" />
         <item
-                android:id="@+id/draw_upload"
-                android:icon="@drawable/ic_upload_primary"
-                android:title="@string/title_upload" />
-        <item
                 android:id="@+id/draw_favorite"
                 android:icon="@drawable/ic_favorite_border_primary"
                 android:title="@string/action_favorite" />
