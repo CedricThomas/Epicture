@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_margin="10dp"
-                android:src="@drawable/ic_add_secondary"
+                app:srcCompat="@drawable/ic_add_secondary"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="@+id/contentFragment"
@@ -97,12 +97,12 @@
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView
             android:id="@+id/nav_view"
-            android:layout_width="175dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
-            app:menu="@menu/drawer_view" >
-    </android.support.design.widget.NavigationView>
+            app:headerLayout="@layout/drawer_header_layout"
+            app:menu="@menu/drawer_menu" />
 
 </android.support.v4.widget.DrawerLayout>
 

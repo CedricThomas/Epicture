@@ -12,5 +12,6 @@ data class GalleryImageModel(
     val description: String?,
     var selected: Boolean = false,
     var favorite: Boolean?,
+    val vote: String?,
     var images: ArrayList<ImageModel>?
 )

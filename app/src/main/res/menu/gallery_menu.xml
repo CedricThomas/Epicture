@@ -7,8 +7,14 @@
             android:id="@+id/action_search"
             android:icon="@drawable/ic_search_primary"
             android:title="@string/search"
-            app:showAsAction="always"
+            app:showAsAction="ifRoom"
             app:actionViewClass="android.support.v7.widget.SearchView" />
+
+    <item
+            android:id="@+id/action_kill_search"
+            android:icon="@drawable/ic_kill_search_secondary"
+            android:title="@string/action_close_search"
+            app:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/action_cancel"
@@ -31,9 +37,9 @@
 
     <item
             android:id="@+id/action_favorite"
-            android:icon="@drawable/ic_favorite_border_primary"
+            android:icon="@drawable/ic_favorite_border_secondary"
             android:title="@string/action_favorite"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always"/>
 
     <item
             android:id="@+id/action_select_all"

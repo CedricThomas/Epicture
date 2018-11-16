@@ -148,7 +148,6 @@ class GalleryFragmentItemAdapter(
     }
 
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
-        Log.i(position.toString(), images[position].selected.toString())
         if (getItemViewType(position) == animatedType)
             bindAnimatedHolder(rawHolder, position)
         else

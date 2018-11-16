@@ -26,5 +26,6 @@
     <string name="search">Search</string>
     <string name="select_all">Select all</string>
     <string name="title">Title</string>
+    <string name="action_close_search">Close Search</string>
 
 </resources>

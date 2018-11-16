@@ -4,36 +4,79 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
-import com.dev.epicture.epicture.activities.home.adapter.FavoritesFragmentItemAdapter
+import com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter
 import com.dev.epicture.epicture.activities.home.decorators.ItemOffsetDecoration
 import com.dev.epicture.epicture.services.imgur.ImgurService
-import com.dev.epicture.epicture.services.imgur.models.AlbumModel
-import com.dev.epicture.epicture.services.imgur.models.GalleryImageModel
-import com.dev.epicture.epicture.services.imgur.models.PostModel
-import com.dev.epicture.epicture.services.imgur.models.PostType
+import com.dev.epicture.epicture.services.imgur.models.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
-import kotlinx.android.synthetic.main.fragment_gallery_favorites.*
+import kotlinx.android.synthetic.main.fragment_gallery_search.*
 
 
-class FavoritesFragment : GalleryFragment() {
+class SearchFragment : GalleryFragment() {
 
     private var images: ArrayList<PostModel> = ArrayList()
-    private lateinit var adapter: FavoritesFragmentItemAdapter
+    private lateinit var adapter: SearchFragmentItemAdapter
     private lateinit var fragView: View
     private var loading: Boolean = false
+    private var searching: Boolean = false
+        set(value) {
+            val old = field
+            field = value
+            if (value != old) {
+                page = 0
+                images.clear()
+                loadActivePages(recycler_view, menuManager.supportActionBar?.title.toString())
+            }
+        }
     private var page: Int = 0
 
     // activate / deactivate ActionBar
     private fun setActionsVisibility(status: Boolean)  {
-        menuManager.delete.isVisible = status
+        menuManager.favorite.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
+    }
+
+    private fun cancelSelection() {
+        val selected = adapter.getSelection()
+        selected.forEach { image ->
+            image.selected = false
+        }
+        adapter.selecting = false
+        setActionsVisibility(false)
+        adapter.notifyDataSetChanged()
+    }
+
+    // Favorite activation
+    private fun activateFavorite() {
+        menuManager.favorite.setOnMenuItemClickListener {
+            val selected = adapter.getSelection()
+            for (elem in selected)
+                elem.favorite = !(elem.favorite!!)
+            favorites(selected)
+            cancelSelection()
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+    // KillSearch Activation
+    private fun activateKillSearch() {
+        menuManager.kill_search.setOnMenuItemClickListener {
+            menuManager.kill_search.isVisible = false
+            menuManager.searchItem.isVisible = true
+            menuManager.search.setQuery("", false)
+            menuManager.supportActionBar?.title = ""
+            cancelSelection()
+            searching = false
+            return@setOnMenuItemClickListener true
+        }
     }
 
     // Reload Activation
@@ -41,21 +84,7 @@ class FavoritesFragment : GalleryFragment() {
         // Reload activation
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
-            loadActivePages(recyclerView)
-            return@setOnMenuItemClickListener true
-        }
-    }
-
-    // Delete activation
-    private fun activateDelete() {
-        menuManager.delete.setOnMenuItemClickListener {
-            val removed = adapter.getSelection()
-            for (elem in removed)
-                images.remove(elem)
-            deleteFavorites(removed)
-            adapter.selecting = false
-            setActionsVisibility(false)
-            adapter.notifyDataSetChanged()
+            loadActivePages(recyclerView, menuManager.supportActionBar?.title.toString())
             return@setOnMenuItemClickListener true
         }
     }
@@ -63,13 +92,7 @@ class FavoritesFragment : GalleryFragment() {
     // Cancel activation
     private fun activateCancelSelection() {
         menuManager.cancel.setOnMenuItemClickListener {
-            val selected = adapter.getSelection()
-            selected.forEach { image ->
-                image.selected = false
-            }
-            adapter.selecting = false
-            setActionsVisibility(false)
-            adapter.notifyDataSetChanged()
+            cancelSelection()
             return@setOnMenuItemClickListener true
         }
     }
@@ -81,8 +104,7 @@ class FavoritesFragment : GalleryFragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (!recyclerView.canScrollVertically(1) && !loading) {
                     val size = images.size
-                    loading = true
-                    loadFavoritePage(page + 1) {
+                    val callback: () -> Unit = {
                         if (images.size > size) {
                             page += 1
                         }
@@ -91,38 +113,50 @@ class FavoritesFragment : GalleryFragment() {
                             recyclerView.adapter?.notifyDataSetChanged()
                         }
                     }
+                    loading = true
+                    if (searching)
+                        searchImage(menuManager.search.query.toString(), page + 1, callback = callback)
+                    else
+                        loadGallery(page + 1, callback = callback)
                 }
             }
         })
     }
 
-    private fun loadActivePages(recyclerView: RecyclerView) {
+    private fun activateViewActions(imgurAction: ImgurAction, model: PostModel) {
+        val smartVote = {vote: String -> if (model.is_album) ImgurService.voteAlbum({}, {}, model.id!!, vote) else ImgurService.voteImage({}, {}, model.id!!, vote) }
+        when (imgurAction) {
+            ImgurAction.RESET_VOTE -> smartVote("veto")
+            ImgurAction.DOWN -> smartVote("down")
+            ImgurAction.UP -> smartVote("up")
+            ImgurAction.FAVORITE -> favorites(arrayListOf(model))
+        }
+    }
+
+    private fun loadActivePages(recyclerView: RecyclerView, query: String) {
         if (loading)
             return
         images.clear()
         loading = true
-        for (i in 0..page)
-            loadFavoritePage(i) {
+        for (i in 0..page) {
+            val callback = {
                 if (i == page) {
                     activity?.runOnUiThread {
-                        if (images.isEmpty()) {
-                            recyclerView.visibility = View.GONE
-                            empty.visibility = View.VISIBLE
-                        }
-                        else {
-                            recyclerView.visibility = View.VISIBLE
-                            empty.visibility = View.GONE
-                        }
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
                     loading = false
                 }
             }
+            if (searching)
+                searchImage(query, i, callback = callback)
+            else
+                loadGallery(i, callback = callback)
+        }
     }
 
     private fun createRecyclerView() {
 
-        adapter = FavoritesFragmentItemAdapter(images, context!!) { adapter, model ->
+        adapter = SearchFragmentItemAdapter(images, context!!, {a, b -> activateViewActions(a, b)}) { adapter, model ->
             if (!adapter.selecting) {
                 model.selected = true
                 adapter.selecting = true
@@ -137,18 +171,19 @@ class FavoritesFragment : GalleryFragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        loadActivePages(recyclerView)
+        loadActivePages(recyclerView, "")
         activateCancelSelection()
-        activateDelete()
         activateInfiniteScroll(recyclerView)
         activateReload(recyclerView)
+        activateKillSearch()
+        activateFavorite()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        fragView = inflater.inflate(R.layout.fragment_gallery_favorites, container, false)
+        fragView = inflater.inflate(R.layout.fragment_gallery_search, container, false)
         createRecyclerView()
         return fragView
     }
@@ -192,9 +227,9 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // load favorites
-    private fun loadFavoritePage(page: Int, callback: () -> Unit = {}) {
-        ImgurService.getFavorite({ resp ->
+    // load Trends
+    private fun loadGallery(page: Int = 0, section: String = "hot", sort: String = "viral", window: String = "day", callback: () -> Unit = {}) {
+        ImgurService.getGallery({ resp ->
             try {
                 for (image in resp.data) {
                     images.add(elementToPost(image))
@@ -206,11 +241,30 @@ class FavoritesFragment : GalleryFragment() {
         }, {
             MyApplication.printMessage("Failed to load images page $page")
             callback()
-        }, page.toString())
+        }, page.toString(), section, sort, window)
+    }
+
+
+    // search Images
+    private fun searchImage(query: String,
+                            page: Int, sort: String = "time", window: String = "all", callback: () -> Unit = {}) {
+        ImgurService.search({ resp ->
+            try {
+                for (image in resp.data) {
+                    images.add(elementToPost(image))
+                }
+            } catch (e : Exception) {
+                MyApplication.printMessage("Failed to load images page $page")
+            }
+            callback()
+        }, {
+            MyApplication.printMessage("Failed to load images page $page")
+            callback()
+        }, query, page.toString(), sort, window)
     }
 
     // delete select item from array
-    private fun deleteFavorites(images: ArrayList<PostModel>) {
+    private fun favorites(images: ArrayList<PostModel>) {
         for (image in images) {
             if (image.is_album)
                 ImgurService.favoriteAlbum({}, {}, image.id!!)
@@ -224,12 +278,18 @@ class FavoritesFragment : GalleryFragment() {
         return object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                adapter.filter.filter(query)
+                menuManager.search.setQuery("", false)
+                menuManager.search.clearFocus()
+                menuManager.search.isIconified = true
+                menuManager.supportActionBar?.setDisplayShowTitleEnabled(true)
+                menuManager.supportActionBar?.title = query
+                menuManager.kill_search.isVisible = true
+                menuManager.searchItem.isVisible = false
+                searching = true
                 return false
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                adapter.filter.filter(query)
                 return false
             }
 

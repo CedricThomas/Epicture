@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
@@ -23,11 +22,13 @@ import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.activities.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.activities.home.fragment.GalleryFragment
 import com.dev.epicture.epicture.activities.home.fragment.ImagesFragment
+import com.dev.epicture.epicture.activities.home.fragment.SearchFragment
 import com.dev.epicture.epicture.activities.login.LoginActivity
+import com.dev.epicture.epicture.services.glide.GlideApp
 import com.dev.epicture.epicture.services.imgur.ImgurService
 import com.dev.epicture.epicture.services.upload.UploadService
 import kotlinx.android.synthetic.main.activity_home.*
-
+import kotlinx.android.synthetic.main.drawer_header_layout.view.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -57,14 +58,16 @@ class HomeActivity : AppCompatActivity() {
     lateinit var actionMenu : Menu
     private lateinit var searchView: SearchView
 
-    inner class ActionMenuManager(actionMenu : Menu) {
+    inner class ActionMenuManager(actionMenu: Menu, val supportActionBar: android.support.v7.app.ActionBar?) {
 
+        val kill_search: MenuItem = actionMenu.findItem(R.id.action_kill_search)
         val refresh: MenuItem = actionMenu.findItem(R.id.action_refresh)
         val favorite: MenuItem = actionMenu.findItem(R.id.action_favorite)
         val delete: MenuItem = actionMenu.findItem(R.id.action_delete)
         val cancel: MenuItem = actionMenu.findItem(R.id.action_cancel)
         val selectAll: MenuItem = actionMenu.findItem(R.id.action_select_all)
         val search: SearchView = actionMenu.findItem(R.id.action_search).actionView as SearchView
+        val searchItem: MenuItem = actionMenu.findItem(R.id.action_search)
 
         init {
 
@@ -72,21 +75,24 @@ class HomeActivity : AppCompatActivity() {
                 searchView.isIconified = true
             }
 
+            kill_search.isVisible = false
             refresh.isVisible = false
             favorite.isVisible = false
             delete.isVisible = false
             cancel.isVisible = false
             selectAll.isVisible = false
+            searchItem.isVisible = true
             search.visibility = View.INVISIBLE
         }
 
     }
 
     fun getMenuManager(): ActionMenuManager {
-        return ActionMenuManager(actionMenu)
+        return ActionMenuManager(actionMenu, supportActionBar)
     }
 
     private fun setFragment(fragment: GalleryFragment) {
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         val t = supportFragmentManager.beginTransaction()
         t.replace(R.id.contentFragment, fragment)
         t.commit()
@@ -115,7 +121,7 @@ class HomeActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                setFragment(FavoritesFragment())
+                setFragment(SearchFragment())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -125,16 +131,6 @@ class HomeActivity : AppCompatActivity() {
     private val mOnDrawerItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         when (item.itemId) {
-            R.id.draw_images -> {
-                setFragment(ImagesFragment())
-                drawer.closeDrawers()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.draw_favorite -> {
-                setFragment(FavoritesFragment())
-                drawer.closeDrawers()
-                return@OnNavigationItemSelectedListener true
-            }
             R.id.draw_logout -> {
                 ImgurService.deleteCredentials()
                 val intent = Intent(this, LoginActivity::class.java)
@@ -182,10 +178,7 @@ class HomeActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
+    private fun setupActionBar() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -198,12 +191,28 @@ class HomeActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_secondary)
         }
+    }
 
+    private fun setupFAB() {
         fab.setOnClickListener {
             addMenu = !addMenu
         }
         fab_1.setOnClickListener { UploadService.choose(this) }
         fab_2.setOnClickListener { UploadService.camera(this) }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
+        setupActionBar()
+        setupFAB()
+        ImgurService.getAvatar({it ->
+            runOnUiThread {
+                GlideApp.with(this).load(it.data.avatar).into(nav_view.getHeaderView(0).avatar)
+                nav_view.getHeaderView(0).username.text = it.data.username
+            }
+        },{})
     }
 
     override fun onBackPressed() {

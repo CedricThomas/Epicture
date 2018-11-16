@@ -17,5 +17,7 @@ data class PostModel(
     val mp4Url: String?,
     val fullElement: JsonElement,
     val type : PostType,
+    var favorite: Boolean?,
+    var vote: String?,
     val is_album: Boolean
 ) : SelectableModel()

@@ -17,8 +17,10 @@ import okhttp3.HttpUrl
 import android.graphics.Bitmap
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.services.imgur.models.AccountModel
+import com.dev.epicture.epicture.services.imgur.models.AvatarModel
 import java.io.ByteArrayOutputStream
 
 
@@ -135,7 +137,59 @@ object ImgurService {
         })
     }
 
-    // Get Images
+    // vote Image
+    fun voteImage(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        id: String,
+        action: String
+    ) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("image")
+            .addPathSegment(id)
+            .addPathSegment("vote")
+            .addPathSegment(action)
+            .build()
+
+        val body = RequestBody.create(null, "")
+
+        val request = POSTBuilder(url, body)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
+    // vote Album
+    fun voteAlbum(
+        resolve: (JsonElement) -> Unit,
+        reject: (Exception) -> Unit,
+        id: String,
+        action: String
+    ) {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("album")
+            .addPathSegment(id)
+            .addPathSegment("vote")
+            .addPathSegment(action)
+            .build()
+
+        val body = RequestBody.create(null, "")
+
+        val request = POSTBuilder(url, body)
+        asyncLaunch(request!!, resolve, reject)
+    }
+
+    // get Images
     fun getImages(resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -159,7 +213,7 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // Get Favorite
+    // get Favorite
     fun getFavorite(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -183,7 +237,62 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    fun getAccount(resolve: (BasicImgurResponseModel<AccountModel>) -> Unit, reject: (Exception) -> Unit, name: String) {
+    // Search
+    fun search(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit, query: String,
+               page: String = "0", sort: String = "time", window: String = "all") {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("gallery")
+            .addPathSegment("search")
+            .addPathSegment(sort)
+            .addPathSegment(window)
+            .addPathSegment(page)
+            .addQueryParameter("q", query)
+            .build()
+
+        val request = GETBuilder(url)
+        val customResolve = { res: JsonElement ->
+            val type = object : TypeToken<BasicImgurResponseModel<ArrayList<JsonElement>>>() {}.type
+            val data = Gson().fromJson<BasicImgurResponseModel<ArrayList<JsonElement>>>(res.toString(), type)
+            resolve(data)
+        }
+        asyncLaunch(request!!, customResolve, reject)
+    }
+
+    // get a gallery
+    fun getGallery(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit,
+                  page: String = "0", section: String = "hot", sort: String = "viral", window: String = "day") {
+        if (!authenticated)
+            throw IOException("You are not connected")
+
+        // https://api.imgur.com/3/gallery/{{section}}/{{sort}}/{{window}}/{{page}}?showViral={{showViral}}&mature={{showMature}}&album_previews={{albumPreviews}}
+        val url = HttpUrl.Builder()
+            .scheme("https")
+            .host(host)
+            .addPathSegment(apiVersion)
+            .addPathSegment("gallery")
+            .addPathSegment(section)
+            .addPathSegment(sort)
+            .addPathSegment(window)
+            .addPathSegment(page)
+            .build()
+
+        val request = GETBuilder(url)
+        val customResolve = { res: JsonElement ->
+            val type = object : TypeToken<BasicImgurResponseModel<ArrayList<JsonElement>>>() {}.type
+            val data = Gson().fromJson<BasicImgurResponseModel<ArrayList<JsonElement>>>(res.toString(), type)
+            resolve(data)
+        }
+        asyncLaunch(request!!, customResolve, reject)
+    }
+
+    // get custom AvatarModel
+    fun getAvatar(resolve: (BasicImgurResponseModel<AvatarModel>) -> Unit, reject: (Exception) -> Unit) {
         if (!authenticated)
             throw IOException("You are not connected")
 
@@ -192,18 +301,25 @@ object ImgurService {
             .host(host)
             .addPathSegment(apiVersion)
             .addPathSegment("account")
-            .addPathSegment(name)
+            .addPathSegment(informations["account_username"]!!)
+            .addPathSegment("avatar")
             .build()
 
         val request = GETBuilder(url)
         val customResolve = { res: JsonElement ->
-            val type = object : TypeToken<BasicImgurResponseModel<AccountModel>>() {}.type
-            val data = Gson().fromJson<BasicImgurResponseModel<AccountModel>>(res.toString(), type)
-            resolve(data)
+            try {
+                val type = object : TypeToken<BasicImgurResponseModel<AvatarModel>>() {}.type
+                val data = Gson().fromJson<BasicImgurResponseModel<AvatarModel>>(res.toString(), type)
+                val model = AvatarModel(data.data.avatar, informations["account_username"])
+                resolve(BasicImgurResponseModel(model, data.success, data.status))
+            } catch (e: java.lang.Exception) {
+                reject(e)
+            }
         }
         asyncLaunch(request!!, customResolve, reject)
     }
 
+    // delete User Image
     fun deleteImage(resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit, id: String) {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -220,6 +336,7 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
+    // toggle Favorite on Image
     fun favoriteImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -243,6 +360,7 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
+    // toggle Favorite on Album
     fun favoriteAlbum(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -266,6 +384,7 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
+    // upload a Bitmap (Async)
     fun uploadImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -300,6 +419,8 @@ object ImgurService {
 
         }).start()
     }
+
+    // Tools
 
     private fun POSTBuilder(url: HttpUrl, body: RequestBody): Request? {
         return Request.Builder()
