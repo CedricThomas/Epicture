@@ -52,6 +52,7 @@ class FavoritesFragment : GalleryFragment() {
             val removed = adapter.getSelection()
             for (elem in removed)
                 images.remove(elem)
+            updateEmptyImage()
             deleteFavorites(removed)
             adapter.selecting = false
             setActionsVisibility(false)
@@ -96,6 +97,17 @@ class FavoritesFragment : GalleryFragment() {
         })
     }
 
+    private fun updateEmptyImage() {
+        if (images.isEmpty()) {
+            recycler_view.visibility = View.GONE
+            empty.visibility = View.VISIBLE
+        } else {
+            recycler_view.visibility = View.VISIBLE
+            empty.visibility = View.GONE
+        }
+
+    }
+
     private fun loadActivePages(recyclerView: RecyclerView) {
         if (loading)
             return
@@ -105,14 +117,7 @@ class FavoritesFragment : GalleryFragment() {
             loadFavoritePage(i) {
                 if (i == page) {
                     activity?.runOnUiThread {
-                        if (images.isEmpty()) {
-                            recyclerView.visibility = View.GONE
-                            empty.visibility = View.VISIBLE
-                        }
-                        else {
-                            recyclerView.visibility = View.VISIBLE
-                            empty.visibility = View.GONE
-                        }
+                        updateEmptyImage()
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
                     loading = false
