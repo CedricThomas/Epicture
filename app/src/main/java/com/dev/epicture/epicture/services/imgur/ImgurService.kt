@@ -137,8 +137,8 @@ object ImgurService {
         })
     }
 
-    // vote Image
-    fun voteImage(
+    // vote
+    fun vote(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
         id: String,
@@ -151,33 +151,7 @@ object ImgurService {
             .scheme("https")
             .host(host)
             .addPathSegment(apiVersion)
-            .addPathSegment("image")
-            .addPathSegment(id)
-            .addPathSegment("vote")
-            .addPathSegment(action)
-            .build()
-
-        val body = RequestBody.create(null, "")
-
-        val request = POSTBuilder(url, body)
-        asyncLaunch(request!!, resolve, reject)
-    }
-
-    // vote Album
-    fun voteAlbum(
-        resolve: (JsonElement) -> Unit,
-        reject: (Exception) -> Unit,
-        id: String,
-        action: String
-    ) {
-        if (!authenticated)
-            throw IOException("You are not connected")
-
-        val url = HttpUrl.Builder()
-            .scheme("https")
-            .host(host)
-            .addPathSegment(apiVersion)
-            .addPathSegment("album")
+            .addPathSegment("gallery")
             .addPathSegment(id)
             .addPathSegment("vote")
             .addPathSegment(action)

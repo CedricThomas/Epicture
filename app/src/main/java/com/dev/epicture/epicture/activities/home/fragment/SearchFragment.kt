@@ -124,7 +124,7 @@ class SearchFragment : GalleryFragment() {
     }
 
     private fun activateViewActions(imgurAction: ImgurAction, model: PostModel) {
-        val smartVote = {vote: String -> if (model.is_album) ImgurService.voteAlbum({}, {}, model.id!!, vote) else ImgurService.voteImage({}, {}, model.id!!, vote) }
+        val smartVote = {vote: String -> ImgurService.vote({}, {}, model.id!!, vote)}
         when (imgurAction) {
             ImgurAction.RESET_VOTE -> smartVote("veto")
             ImgurAction.DOWN -> smartVote("down")

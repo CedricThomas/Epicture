@@ -129,7 +129,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private val mOnDrawerItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
-        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         when (item.itemId) {
             R.id.draw_logout -> {
                 ImgurService.deleteCredentials()

@@ -54,7 +54,7 @@ class SearchFragmentItemAdapter(
         abstract val favorite: ToggleButton
     }
 
-    inner class ImageHolder (view: View) : PostHolder(view) {
+    inner class ImageHolder(view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_image_select_toggle
         override val titleView: TextView = view.post_image_title
         override val viewsView: TextView = view.post_image_view_text
@@ -108,30 +108,45 @@ class SearchFragmentItemAdapter(
         }
     }
 
-    private fun activateUpDown(holder: PostHolder, position: Int) {
-        holder.upImage.setOnClickListener {
-            if (images[position].vote == "up") {
-                actionActivator(ImgurAction.RESET_VOTE, images[position])
-                images[position].vote = null
-                GlideApp.with(context).load(R.drawable.ic_arrow_up).into(holder.upImage)
-            } else {
-                actionActivator(ImgurAction.UP, images[position])
-                images[position].vote = "up"
-                GlideApp.with(context).load(R.drawable.ic_arrow_up_secondary).into(holder.upImage)
-                GlideApp.with(context).load(R.drawable.ic_arrow_drop_down).into(holder.downImage)
-            }
-        }
+    private fun activateDown(holder: PostHolder, position: Int) {
         holder.downImage.setOnClickListener {
             if (images[position].vote == "down") {
                 actionActivator(ImgurAction.RESET_VOTE, images[position])
                 images[position].vote = null
                 GlideApp.with(context).load(R.drawable.ic_arrow_drop_down).into(holder.downImage)
+                images[position].downNb = images[position].downNb!! - 1
             } else {
                 actionActivator(ImgurAction.DOWN, images[position])
+                if (images[position].vote == "up")
+                    images[position].upNb = images[position].upNb!! - 1
                 images[position].vote = "down"
                 GlideApp.with(context).load(R.drawable.ic_arrow_drop_down_secondary).into(holder.downImage)
                 GlideApp.with(context).load(R.drawable.ic_arrow_up).into(holder.upImage)
+                images[position].downNb = images[position].downNb!! + 1
             }
+            holder.downView.text = images[position].downNb.toString()
+            holder.upView.text = images[position].upNb.toString()
+        }
+    }
+
+    private fun activateUp(holder: PostHolder, position: Int) {
+        holder.upImage.setOnClickListener {
+            if (images[position].vote == "up") {
+                actionActivator(ImgurAction.RESET_VOTE, images[position])
+                images[position].vote = null
+                GlideApp.with(context).load(R.drawable.ic_arrow_up).into(holder.upImage)
+                images[position].upNb = images[position].upNb!! - 1
+            } else {
+                actionActivator(ImgurAction.UP, images[position])
+                if (images[position].vote == "down")
+                    images[position].downNb = images[position].downNb!! - 1
+                images[position].vote = "up"
+                GlideApp.with(context).load(R.drawable.ic_arrow_up_secondary).into(holder.upImage)
+                GlideApp.with(context).load(R.drawable.ic_arrow_drop_down).into(holder.downImage)
+                images[position].upNb = images[position].upNb!! + 1
+            }
+            holder.downView.text = images[position].downNb.toString()
+            holder.upView.text = images[position].upNb.toString()
         }
     }
 
@@ -149,13 +164,15 @@ class SearchFragmentItemAdapter(
         holder.downView.text = images[position].downNb.toString()
         holder.upView.text = images[position].upNb.toString()
         holder.viewsView.text = images[position].viewNb.toString()
-        holder.favorite.isChecked = images[position].favorite!!
         if (images[position].vote != null && images[position].vote == "up") {
             GlideApp.with(context).load(R.drawable.ic_arrow_up_secondary).into(holder.upImage)
         } else if (images[position].vote != null && images[position].vote == "down") {
             GlideApp.with(context).load(R.drawable.ic_arrow_drop_down_secondary).into(holder.downImage)
         }
-        activateUpDown(holder, position)
+        activateUp(holder, position)
+        activateDown(holder, position)
+
+        holder.favorite.isChecked = images[position].favorite!!
         activateFavorite(holder, position)
     }
 
