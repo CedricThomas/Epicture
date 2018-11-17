@@ -27,8 +27,8 @@ class FavoritesFragment : GalleryFragment() {
     private var loading: Boolean = false
     private var page: Int = 0
 
-    // activate / deactivate ActionBar
-    private fun setActionsVisibility(status: Boolean)  {
+    // activate / deactivate selection mode on action bar
+    private fun setSelectionMode(status: Boolean)  {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
@@ -77,7 +77,7 @@ class FavoritesFragment : GalleryFragment() {
             updateEmptyImage()
             deleteFavorites(removed)
             adapter.selecting = false
-            setActionsVisibility(false)
+            setSelectionMode(false)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
@@ -91,7 +91,7 @@ class FavoritesFragment : GalleryFragment() {
                 image.selected = false
             }
             adapter.selecting = false
-            setActionsVisibility(false)
+            setSelectionMode(false)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
@@ -119,6 +119,7 @@ class FavoritesFragment : GalleryFragment() {
         })
     }
 
+    // detect if view is empty and set / unset placeholder
     private fun updateEmptyImage() {
         if (images.isEmpty()) {
             recycler_view.visibility = View.GONE
@@ -130,6 +131,7 @@ class FavoritesFragment : GalleryFragment() {
 
     }
 
+    // load all active pages in images
     private fun loadActivePages(recyclerView: RecyclerView) {
         if (loading)
             return
@@ -147,13 +149,14 @@ class FavoritesFragment : GalleryFragment() {
             }
     }
 
+    // configure RecyclerView and active actionBar actions
     private fun createRecyclerView() {
 
         adapter = FavoritesFragmentItemAdapter(images, context!!) { adapter, model ->
             if (!adapter.selecting) {
                 model.selected = true
                 adapter.selecting = true
-                setActionsVisibility(true)
+                setSelectionMode(true)
                 adapter.notifyDataSetChanged()
             }
             true
@@ -172,6 +175,7 @@ class FavoritesFragment : GalleryFragment() {
         activateFilter()
     }
 
+    // configure recycler view and inflate view
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -181,51 +185,12 @@ class FavoritesFragment : GalleryFragment() {
         return fragView
     }
 
-    private fun elementToPost(element: JsonElement): PostModel {
-        val gson = Gson()
-        if (element.asJsonObject.has("images")) {
-            val data : AlbumModel = gson.fromJson(element, AlbumModel::class.java)
-            // Album
-            return PostModel(
-                data.id,
-                data.title,
-                data.views,
-                data.ups,
-                data.downs,
-                data.images?.get(0)?.link,
-                data.images?.get(0)?.mp4,
-                element,
-                PostType.Album,
-                data.favorite,
-                data.vote,
-                element.asJsonObject.get("is_album").asBoolean
-            )
-        } else {
-            val data : GalleryImageModel = gson.fromJson(element, GalleryImageModel::class.java)
-            // Gallery Image
-            return PostModel(
-                data.id,
-                data.title,
-                data.views,
-                data.ups,
-                data.downs,
-                data.link,
-                data.mp4,
-                element,
-                PostType.GalleryImage,
-                data.favorite,
-                data.vote,
-                element.asJsonObject.get("is_album").asBoolean
-            )
-        }
-    }
-
-    // load favorites
+    // load imgur favorites page in images and call callback at end
     private fun loadFavoritePage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getFavorite({ resp ->
             try {
                 for (image in resp.data) {
-                    images.add(elementToPost(image))
+                    images.add(PostUtils.elementToPost(image))
                 }
             } catch (e : Exception) {
                 MyApplication.printMessage("Failed to load images page $page")
@@ -237,7 +202,7 @@ class FavoritesFragment : GalleryFragment() {
         }, page.toString())
     }
 
-    // delete select item from array
+    // delete select item from array on imgur
     private fun deleteFavorites(images: ArrayList<PostModel>) {
         for (image in images) {
             if (image.is_album)
@@ -247,7 +212,7 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // add a search listener
+    // add a search listener mapped on adapter filter
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

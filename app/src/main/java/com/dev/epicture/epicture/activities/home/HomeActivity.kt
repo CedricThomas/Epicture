@@ -34,86 +34,6 @@ import android.widget.SpinnerAdapter
 
 class HomeActivity : AppCompatActivity() {
 
-    private var animation = false
-    var addMenu: Boolean = false
-        set(value) {
-            if (value == addMenu || animation)
-                return
-            animation = true
-            if (addMenu) {
-                fade(fab_1, fab.height + 5F, 0.0F) {
-                    animation = false
-                }
-                fade(fab_2, 2 * (fab.height + 5F), 0.0F) {
-                    animation = false
-                }
-            } else {
-                fade(fab_1, -fab.height - 5F, 1.0F) {
-                    animation = false
-                }
-                fade(fab_2, 2 * (-fab.height - 5F), 1.0F) {
-                    animation = false
-                }
-            }
-            field = value
-        }
-    lateinit var actionMenu : Menu
-    private lateinit var searchView: SearchView
-
-    inner class ActionMenuManager(actionMenu: Menu, val supportActionBar: android.support.v7.app.ActionBar?) {
-
-        val kill_search: MenuItem = actionMenu.findItem(R.id.action_kill_search)
-        val refresh: MenuItem = actionMenu.findItem(R.id.action_refresh)
-        val favorite: MenuItem = actionMenu.findItem(R.id.action_favorite)
-        val delete: MenuItem = actionMenu.findItem(R.id.action_delete)
-        val cancel: MenuItem = actionMenu.findItem(R.id.action_cancel)
-        val search: SearchView = actionMenu.findItem(R.id.action_search).actionView as SearchView
-        val spinner: Spinner = actionMenu.findItem(R.id.action_spinner).actionView as Spinner
-        val searchItem: MenuItem = actionMenu.findItem(R.id.action_search)
-        val spinnerItem: MenuItem = actionMenu.findItem(R.id.action_spinner)
-
-        init {
-
-            if (!searchView.isIconified) {
-                searchView.isIconified = true
-            }
-
-            kill_search.isVisible = false
-            refresh.isVisible = false
-            favorite.isVisible = false
-            delete.isVisible = false
-            cancel.isVisible = false
-            searchItem.isVisible = true
-            search.visibility = View.INVISIBLE
-            spinnerItem.isVisible = false
-            spinner.visibility = View.INVISIBLE
-            spinner.setSelection(0)
-        }
-
-    }
-
-    fun getMenuManager(): ActionMenuManager {
-        return ActionMenuManager(actionMenu, supportActionBar)
-    }
-
-    private fun setFragment(fragment: GalleryFragment) {
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        val t = supportFragmentManager.beginTransaction()
-        t.replace(R.id.contentFragment, fragment)
-        t.commit()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
-        return when (item?.itemId) {
-            android.R.id.home -> {
-                findViewById<DrawerLayout>(R.id.drawer_layout).openDrawer(GravityCompat.START)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
@@ -146,6 +66,94 @@ class HomeActivity : AppCompatActivity() {
         false
     }
 
+    private var animation = false
+
+    private var addMenu: Boolean = false
+        set(value) {
+            if (value == addMenu || animation)
+                return
+            animation = true
+            if (addMenu) {
+                fade(fab_1, fab.height + 5F, 0.0F) {
+                    animation = false
+                }
+                fade(fab_2, 2 * (fab.height + 5F), 0.0F) {
+                    animation = false
+                }
+            } else {
+                fade(fab_1, -fab.height - 5F, 1.0F) {
+                    animation = false
+                }
+                fade(fab_2, 2 * (-fab.height - 5F), 1.0F) {
+                    animation = false
+                }
+            }
+            field = value
+        }
+
+    private lateinit var actionMenu : Menu
+
+    private lateinit var searchView: SearchView
+
+    // ActionBar sharing class
+    inner class ActionMenuManager(actionMenu: Menu, val supportActionBar: android.support.v7.app.ActionBar?) {
+
+        val kill_search: MenuItem = actionMenu.findItem(R.id.action_kill_search)
+        val refresh: MenuItem = actionMenu.findItem(R.id.action_refresh)
+        val favorite: MenuItem = actionMenu.findItem(R.id.action_favorite)
+        val delete: MenuItem = actionMenu.findItem(R.id.action_delete)
+        val cancel: MenuItem = actionMenu.findItem(R.id.action_cancel)
+        val search: SearchView = actionMenu.findItem(R.id.action_search).actionView as SearchView
+        val spinner: Spinner = actionMenu.findItem(R.id.action_spinner).actionView as Spinner
+        val searchItem: MenuItem = actionMenu.findItem(R.id.action_search)
+        val spinnerItem: MenuItem = actionMenu.findItem(R.id.action_spinner)
+
+        init {
+
+            if (!searchView.isIconified) {
+                searchView.isIconified = true
+            }
+
+            kill_search.isVisible = false
+            refresh.isVisible = false
+            favorite.isVisible = false
+            delete.isVisible = false
+            cancel.isVisible = false
+            searchItem.isVisible = true
+            search.visibility = View.INVISIBLE
+            spinnerItem.isVisible = false
+            spinner.visibility = View.INVISIBLE
+            spinner.setSelection(0)
+        }
+
+    }
+
+    // Allow Fragments to get actionMenu
+    fun getMenuManager(): ActionMenuManager {
+        return ActionMenuManager(actionMenu, supportActionBar)
+    }
+
+    // Change Fragment and reset actionBar
+    private fun setFragment(fragment: GalleryFragment) {
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        val t = supportFragmentManager.beginTransaction()
+        t.replace(R.id.contentFragment, fragment)
+        t.commit()
+    }
+
+    // Open drawer on click
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                findViewById<DrawerLayout>(R.id.drawer_layout).openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    // Setup actionBar with spinner and searchView
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
@@ -164,10 +172,12 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+    // Change Fragment after menu is prepared (mandatory)
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         setFragment(SearchFragment())
         return super.onPrepareOptionsMenu(menu)
     }
+
 
     private fun fade(view: View?, dist: Float, alpha: Float, onAnimationEnd: () -> Unit) {
         view?.animate()
@@ -183,12 +193,15 @@ class HomeActivity : AppCompatActivity() {
             })
     }
 
+
+    // Remove FAB on click
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (addMenu)
             addMenu = !addMenu
         return super.dispatchTouchEvent(ev)
     }
 
+    // Configure actionBar
     private fun setupActionBar() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
@@ -204,6 +217,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    // Configure FAB
     private fun setupFAB() {
         fab.setOnClickListener {
             addMenu = !addMenu
@@ -213,11 +227,8 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        setupActionBar()
-        setupFAB()
+    // Configure Drawer Avatar
+    private fun setupAvatar() {
         ImgurService.getAvatar({it ->
             runOnUiThread {
                 GlideApp.with(this).load(it.data.avatar).into(nav_view.getHeaderView(0).avatar)
@@ -225,6 +236,16 @@ class HomeActivity : AppCompatActivity() {
             }
         },{})
     }
+
+    // Call setup methods
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_home)
+        setupActionBar()
+        setupFAB()
+        setupAvatar()
+    }
+
 
     override fun onBackPressed() {
         if (!searchView.isIconified) {
@@ -234,8 +255,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         UploadService.onActivityResult(this, requestCode, resultCode, data)
     }
+
 
 }

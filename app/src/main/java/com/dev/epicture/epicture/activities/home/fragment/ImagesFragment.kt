@@ -26,8 +26,8 @@ class ImagesFragment : GalleryFragment() {
     private var selectAllStatus = true
     private lateinit var recyclerView: RecyclerView
 
-    // activate / deactivate ActionBar
-    private fun setActionsVisibility(status: Boolean)  {
+    // activate / deactivate selection in ActionBar
+    private fun setSelectionMode(status: Boolean)  {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
@@ -78,7 +78,7 @@ class ImagesFragment : GalleryFragment() {
                 images.remove(elem)
             deleteImages(removed)
             adapter.selecting = false
-            setActionsVisibility(false)
+            setSelectionMode(false)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
@@ -92,7 +92,7 @@ class ImagesFragment : GalleryFragment() {
                 image.selected = false
             }
             adapter.selecting = false
-            setActionsVisibility(false)
+            setSelectionMode(false)
             adapter.notifyDataSetChanged()
             return@setOnMenuItemClickListener true
         }
@@ -120,28 +120,7 @@ class ImagesFragment : GalleryFragment() {
         })
     }
 
-    private fun createRecyclerView() {
-
-        adapter = GalleryFragmentItemAdapter(images, context!!) { adapter, model ->
-            if (!adapter.selecting) {
-                model.selected = true
-                adapter.selecting = true
-                setActionsVisibility(true)
-                adapter.notifyDataSetChanged()
-            }
-            true
-        }
-        recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(context, 2)
-        recyclerView.adapter = adapter
-        loadActivePages(recyclerView)
-        activateReload(recyclerView)
-        activateDelete()
-        activateCancelSelection()
-        activateInfiniteScroll(recyclerView)
-        activateFilter()
-    }
-
+    // load all active pages in images
     private fun loadActivePages(recyclerView: RecyclerView) {
         if (loading)
             return
@@ -158,6 +137,30 @@ class ImagesFragment : GalleryFragment() {
             }
     }
 
+    // configure RecyclerView and active actionBar actions
+    private fun createRecyclerView() {
+
+        adapter = GalleryFragmentItemAdapter(images, context!!) { adapter, model ->
+            if (!adapter.selecting) {
+                model.selected = true
+                adapter.selecting = true
+                setSelectionMode(true)
+                adapter.notifyDataSetChanged()
+            }
+            true
+        }
+        recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = GridLayoutManager(context, 2)
+        recyclerView.adapter = adapter
+        loadActivePages(recyclerView)
+        activateReload(recyclerView)
+        activateDelete()
+        activateCancelSelection()
+        activateInfiniteScroll(recyclerView)
+        activateFilter()
+    }
+
+    // configure recycler view and inflate view
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -167,7 +170,7 @@ class ImagesFragment : GalleryFragment() {
         return fragView
     }
 
-    // add a page in images array and update recycler view
+    // add a page in images array and call callback at end
     private fun loadImagesPage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getImages({ resp ->
             try {
@@ -184,7 +187,7 @@ class ImagesFragment : GalleryFragment() {
         }, page.toString())
     }
 
-    // delete select item from array
+    // delete select item from array on imgur
     private fun deleteImages(images: ArrayList<ImageModel>) {
         for (image in images) {
             ImgurService.deleteImage({
@@ -195,7 +198,7 @@ class ImagesFragment : GalleryFragment() {
 
     }
 
-    // add a search listener
+    // add a search listener mapped on adapter filter
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

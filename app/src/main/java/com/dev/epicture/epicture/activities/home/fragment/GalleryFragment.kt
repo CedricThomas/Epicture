@@ -11,6 +11,7 @@ open class GalleryFragment : Fragment() {
 
     lateinit var menuManager: ActionMenuManager
 
+    // Link searchView with the gallery fragment searchListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activity = (activity as HomeActivity)
@@ -18,6 +19,7 @@ open class GalleryFragment : Fragment() {
         menuManager.search.setOnQueryTextListener(getSearchListener())
     }
 
+    // Allow to use an unified searchListener method
     open fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

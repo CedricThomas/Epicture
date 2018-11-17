@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,20 +36,21 @@ class SearchFragment : GalleryFragment() {
         }
     private var page: Int = 0
 
-    // activate / deactivate ActionBar
-    private fun setActionsVisibility(status: Boolean)  {
+    // activate / deactivate selection mode on action bar
+    private fun setSelectionMode(status: Boolean)  {
         menuManager.favorite.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
     }
 
+    // Cancel selection in adapter
     private fun cancelSelection() {
         val selected = adapter.getSelection()
         selected.forEach { image ->
             image.selected = false
         }
         adapter.selecting = false
-        setActionsVisibility(false)
+        setSelectionMode(false)
         adapter.notifyDataSetChanged()
     }
 
@@ -123,6 +123,7 @@ class SearchFragment : GalleryFragment() {
         })
     }
 
+    // callback to activate Imgur functions (upvote downvote favorite)
     private fun activateViewActions(imgurAction: ImgurAction, model: PostModel) {
         val smartVote = {vote: String -> ImgurService.vote({}, {}, model.id!!, vote)}
         when (imgurAction) {
@@ -133,6 +134,7 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
+    // load all active pages in images (with search and trends ) => c.f. searching
     private fun loadActivePages(recyclerView: RecyclerView, query: String) {
         if (loading)
             return
@@ -154,13 +156,14 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
+    // configure RecyclerView and active actionBar actions
     private fun createRecyclerView() {
 
         adapter = SearchFragmentItemAdapter(images, context!!, {a, b -> activateViewActions(a, b)}) { adapter, model ->
             if (!adapter.selecting) {
                 model.selected = true
                 adapter.selecting = true
-                setActionsVisibility(true)
+                setSelectionMode(true)
                 adapter.notifyDataSetChanged()
             }
             true
@@ -179,6 +182,7 @@ class SearchFragment : GalleryFragment() {
         activateFavorite()
     }
 
+    // configure recycler view and inflate view
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -188,51 +192,12 @@ class SearchFragment : GalleryFragment() {
         return fragView
     }
 
-    private fun elementToPost(element: JsonElement): PostModel {
-        val gson = Gson()
-        if (element.asJsonObject.has("images")) {
-            val data : AlbumModel = gson.fromJson(element, AlbumModel::class.java)
-            // Album
-            return PostModel(
-                data.id,
-                data.title,
-                data.views,
-                data.ups,
-                data.downs,
-                data.images?.get(0)?.link,
-                data.images?.get(0)?.mp4,
-                element,
-                PostType.Album,
-                data.favorite,
-                data.vote,
-                element.asJsonObject.get("is_album").asBoolean
-            )
-        } else {
-            val data : GalleryImageModel = gson.fromJson(element, GalleryImageModel::class.java)
-            // Gallery Image
-            return PostModel(
-                data.id,
-                data.title,
-                data.views,
-                data.ups,
-                data.downs,
-                data.link,
-                data.mp4,
-                element,
-                PostType.GalleryImage,
-                data.favorite,
-                data.vote,
-                element.asJsonObject.get("is_album").asBoolean
-            )
-        }
-    }
-
     // load Trends
     private fun loadGallery(page: Int = 0, section: String = "hot", sort: String = "viral", window: String = "day", callback: () -> Unit = {}) {
         ImgurService.getGallery({ resp ->
             try {
                 for (image in resp.data) {
-                    images.add(elementToPost(image))
+                    images.add(PostUtils.elementToPost(image))
                 }
             } catch (e : Exception) {
                 MyApplication.printMessage("Failed to load images page $page")
@@ -251,7 +216,7 @@ class SearchFragment : GalleryFragment() {
         ImgurService.search({ resp ->
             try {
                 for (image in resp.data) {
-                    images.add(elementToPost(image))
+                    images.add(PostUtils.elementToPost(image))
                 }
             } catch (e : Exception) {
                 MyApplication.printMessage("Failed to load images page $page")
@@ -273,7 +238,7 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // add a search listener
+    // add a search listener custom
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

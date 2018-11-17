@@ -2,26 +2,22 @@ package com.dev.epicture.epicture.services.imgur
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.net.Uri
+import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat.startActivity
+import android.util.Log
+import com.dev.epicture.epicture.MyApplication
+import com.dev.epicture.epicture.services.imgur.models.AvatarModel
 import com.dev.epicture.epicture.services.imgur.models.BasicImgurResponseModel
 import com.dev.epicture.epicture.services.imgur.models.ImageModel
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
-import java.io.IOException
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.HttpUrl
-import android.graphics.Bitmap
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import android.util.Log
-import com.dev.epicture.epicture.MyApplication
-import com.dev.epicture.epicture.services.imgur.models.AccountModel
-import com.dev.epicture.epicture.services.imgur.models.AvatarModel
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
 object ImgurService {
@@ -249,7 +245,7 @@ object ImgurService {
             throw IOException("You are not connected")
 
         Log.i("ImgurService", "getGallery")
-        // https://api.imgur.com/3/gallery/{{section}}/{{sort}}/{{window}}/{{page}}?showViral={{showViral}}&mature={{showMature}}&album_previews={{albumPreviews}}
+
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
