@@ -14,10 +14,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.activities.home.fragment.FavoritesFragment
 import com.dev.epicture.epicture.activities.home.fragment.GalleryFragment
@@ -29,6 +25,12 @@ import com.dev.epicture.epicture.services.imgur.ImgurService
 import com.dev.epicture.epicture.services.upload.UploadService
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.drawer_header_layout.view.*
+import android.support.v4.view.MenuItemCompat
+import android.view.*
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.SpinnerAdapter
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -65,9 +67,10 @@ class HomeActivity : AppCompatActivity() {
         val favorite: MenuItem = actionMenu.findItem(R.id.action_favorite)
         val delete: MenuItem = actionMenu.findItem(R.id.action_delete)
         val cancel: MenuItem = actionMenu.findItem(R.id.action_cancel)
-        val selectAll: MenuItem = actionMenu.findItem(R.id.action_select_all)
         val search: SearchView = actionMenu.findItem(R.id.action_search).actionView as SearchView
+        val spinner: Spinner = actionMenu.findItem(R.id.action_spinner).actionView as Spinner
         val searchItem: MenuItem = actionMenu.findItem(R.id.action_search)
+        val spinnerItem: MenuItem = actionMenu.findItem(R.id.action_spinner)
 
         init {
 
@@ -80,9 +83,11 @@ class HomeActivity : AppCompatActivity() {
             favorite.isVisible = false
             delete.isVisible = false
             cancel.isVisible = false
-            selectAll.isVisible = false
             searchItem.isVisible = true
             search.visibility = View.INVISIBLE
+            spinnerItem.isVisible = false
+            spinner.visibility = View.INVISIBLE
+            spinner.setSelection(0)
         }
 
     }
@@ -147,14 +152,21 @@ class HomeActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.gallery_menu, menu)
         actionMenu = menu
 
+        val s : Spinner = menu.findItem(R.id.action_spinner).actionView as Spinner
+        val mSpinnerAdapter : SpinnerAdapter = ArrayAdapter.createFromResource(supportActionBar?.themedContext!!, R.array.dropdown, android.R.layout.simple_spinner_dropdown_item)
+        s.adapter = mSpinnerAdapter
+
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.action_search).actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView.maxWidth = Integer.MAX_VALUE
 
-        // Fragment need thee actionMenu
-        setFragment(ImagesFragment())
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        setFragment(SearchFragment())
+        return super.onPrepareOptionsMenu(menu)
     }
 
     private fun fade(view: View?, dist: Float, alpha: Float, onAnimationEnd: () -> Unit) {

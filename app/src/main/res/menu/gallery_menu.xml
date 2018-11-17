@@ -42,8 +42,8 @@
             app:showAsAction="always"/>
 
     <item
-            android:id="@+id/action_select_all"
-            android:title="@string/select_all"/>
-
-
+            android:id="@+id/action_spinner"
+            android:padding="0dip"
+            app:actionViewClass="android.widget.Spinner"
+            android:title="@string/filter" app:showAsAction="ifRoom"/>
 </menu>

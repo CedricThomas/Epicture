@@ -8,6 +8,8 @@ import android.view.animation.ScaleAnimation
 import android.widget.CompoundButton
 import android.widget.ToggleButton
 import com.dev.epicture.epicture.services.imgur.models.SelectableModel
+import com.dev.epicture.epicture.services.imgur.models.ImgurType
+
 
 abstract class SelectableAdapter(
     private val selectActivator: (SelectableAdapter, SelectableModel) -> Boolean
@@ -78,4 +80,6 @@ abstract class SelectableAdapter(
         }
 
     }
+
+    abstract fun filter(type: ImgurType)
 }

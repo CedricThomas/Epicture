@@ -7,11 +7,13 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.activities.home.adapter.GalleryFragmentItemAdapter
 import com.dev.epicture.epicture.services.imgur.ImgurService
 import com.dev.epicture.epicture.services.imgur.models.ImageModel
+import com.dev.epicture.epicture.services.imgur.models.ImgurType
 
 
 class ImagesFragment : GalleryFragment() {
@@ -22,27 +24,37 @@ class ImagesFragment : GalleryFragment() {
     private var loading: Boolean = false
     private var page: Int = 0
     private var selectAllStatus = true
+    private lateinit var recyclerView: RecyclerView
 
     // activate / deactivate ActionBar
     private fun setActionsVisibility(status: Boolean)  {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
+        menuManager.spinnerItem.isVisible = !status
     }
 
-    // Select selectAllStatus Activation
-    private fun activateSelectAll(recyclerView: RecyclerView) {
-        // Reload activation
-        menuManager.selectAll.isVisible = true
-        menuManager.selectAll.setOnMenuItemClickListener {
-            val adapter = recyclerView.adapter as GalleryFragmentItemAdapter
-            adapter.selecting = true
-            for (elem in images)
-                elem.selected = selectAllStatus
-            selectAllStatus = !selectAllStatus
-            setActionsVisibility(true)
-            adapter.notifyDataSetChanged()
-            return@setOnMenuItemClickListener true
+    // Filter Activation
+    private fun activateFilter() {
+
+        menuManager.spinnerItem.isVisible = true
+        menuManager.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                if (images.size == 0)
+                    return
+                adapter.filter(ImgurType.ALL)
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (images.size == 0)
+                    return
+                when(position) {
+                    0 -> adapter.filter(ImgurType.ALL)
+                    1 -> adapter.filter(ImgurType.GIFS)
+                    2 -> adapter.filter(ImgurType.IMAGES)
+                    else -> adapter.filter(ImgurType.ALL)
+                }
+            }
         }
     }
 
@@ -119,17 +131,15 @@ class ImagesFragment : GalleryFragment() {
             }
             true
         }
-        val recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView = fragView.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = GridLayoutManager(context, 2)
         recyclerView.adapter = adapter
-
         loadActivePages(recyclerView)
         activateReload(recyclerView)
         activateDelete()
         activateCancelSelection()
         activateInfiniteScroll(recyclerView)
-        activateSelectAll(recyclerView)
-
+        activateFilter()
     }
 
     private fun loadActivePages(recyclerView: RecyclerView) {

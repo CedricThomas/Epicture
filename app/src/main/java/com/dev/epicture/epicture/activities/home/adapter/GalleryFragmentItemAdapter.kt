@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.services.glide.GlideApp
 import com.dev.epicture.epicture.services.imgur.models.ImageModel
+import com.dev.epicture.epicture.services.imgur.models.ImgurType
 import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.gallery_animated_item.view.*
 import kotlinx.android.synthetic.main.gallery_image_item.view.*
@@ -183,6 +184,26 @@ class GalleryFragmentItemAdapter(
                 }
             }
         }
+    }
+
+    override fun filter(type: ImgurType) {
+        val filter: (ImageModel) -> Boolean  = when (type) {
+            ImgurType.ALL -> {{
+                true
+            }}
+            ImgurType.IMAGES -> {{it ->
+                it.mp4 == null
+            }}
+            ImgurType.GIFS -> {{
+                it.mp4 != null
+            }}
+        }
+        val new: ArrayList<ImageModel> = ArrayList()
+        for (elem in imagesFull)
+            if (filter(elem))
+                new.add(elem)
+        images = new
+        notifyDataSetChanged()
     }
 
 }

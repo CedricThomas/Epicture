@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.services.glide.GlideApp
 import com.dev.epicture.epicture.services.imgur.models.ImgurAction
+import com.dev.epicture.epicture.services.imgur.models.ImgurType
 import com.dev.epicture.epicture.services.imgur.models.PostModel
 import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.post_animated_item.view.*
@@ -258,4 +259,6 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    override fun filter(type: ImgurType) {
+    }
 }

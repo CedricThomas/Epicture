@@ -27,5 +27,12 @@
     <string name="select_all">Select all</string>
     <string name="title">Title</string>
     <string name="action_close_search">Close Search</string>
+    <string name="filter">Filter</string>
+    <string-array name="dropdown">
+        <item>All</item>
+        <item>Gifs</item>
+        <item>Images</item>
+    </string-array>
 
 </resources>
+

@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.services.glide.GlideApp
+import com.dev.epicture.epicture.services.imgur.models.ImageModel
+import com.dev.epicture.epicture.services.imgur.models.ImgurType
 import com.dev.epicture.epicture.services.imgur.models.PostModel
 import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.post_animated_item.view.*
@@ -207,6 +209,28 @@ class FavoritesFragmentItemAdapter(
                 }
             }
         }
+
+
+    }
+
+    override fun filter(type: ImgurType) {
+        val filter: (PostModel) -> Boolean  = when (type) {
+            ImgurType.ALL -> {{
+                true
+            }}
+            ImgurType.IMAGES -> {{it ->
+                it.mp4Url == null
+            }}
+            ImgurType.GIFS -> {{
+                it.mp4Url != null
+            }}
+        }
+        val new: ArrayList<PostModel> = ArrayList()
+        for (elem in imagesFull)
+            if (filter(elem))
+                new.add(elem)
+        images = new
+        notifyDataSetChanged()
     }
 
 }

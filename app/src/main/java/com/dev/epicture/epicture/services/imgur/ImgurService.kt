@@ -147,6 +147,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "vote")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -168,6 +169,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "getImages")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -192,6 +194,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "getFavorite")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -217,6 +220,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "search")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -244,6 +248,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "getGallery")
         // https://api.imgur.com/3/gallery/{{section}}/{{sort}}/{{window}}/{{page}}?showViral={{showViral}}&mature={{showMature}}&album_previews={{albumPreviews}}
         val url = HttpUrl.Builder()
             .scheme("https")
@@ -270,6 +275,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "getAvatar")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -298,6 +304,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "deleteImage")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -319,6 +326,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "favoriteImage")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -343,6 +351,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "favoriteAlbum")
         val url = HttpUrl.Builder()
             .scheme("https")
             .host(host)
@@ -370,6 +379,7 @@ object ImgurService {
         if (!authenticated)
             throw IOException("You are not connected")
 
+        Log.i("ImgurService", "uploadImage")
         Thread(Runnable {
             val url = HttpUrl.Builder()
                 .scheme("https")

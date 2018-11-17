@@ -7,15 +7,13 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import com.dev.epicture.epicture.MyApplication
 import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.activities.home.adapter.FavoritesFragmentItemAdapter
 import com.dev.epicture.epicture.activities.home.decorators.ItemOffsetDecoration
 import com.dev.epicture.epicture.services.imgur.ImgurService
-import com.dev.epicture.epicture.services.imgur.models.AlbumModel
-import com.dev.epicture.epicture.services.imgur.models.GalleryImageModel
-import com.dev.epicture.epicture.services.imgur.models.PostModel
-import com.dev.epicture.epicture.services.imgur.models.PostType
+import com.dev.epicture.epicture.services.imgur.models.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.fragment_gallery_favorites.*
@@ -34,6 +32,30 @@ class FavoritesFragment : GalleryFragment() {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
+        menuManager.spinnerItem.isVisible = !status
+    }
+
+    // Filter Activation
+    private fun activateFilter() {
+        menuManager.spinner.visibility = View.VISIBLE
+        menuManager.spinnerItem.isVisible = true
+        menuManager.spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                if (images.size == 0)
+                    return
+                adapter.filter(ImgurType.ALL)
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (images.size == 0)
+                    return
+                when(position) {
+                    0 -> adapter.filter(ImgurType.ALL)
+                    1 -> adapter.filter(ImgurType.GIFS)
+                    2 -> adapter.filter(ImgurType.IMAGES)
+                }
+            }
+        }
     }
 
     // Reload Activation
@@ -147,6 +169,7 @@ class FavoritesFragment : GalleryFragment() {
         activateDelete()
         activateInfiniteScroll(recyclerView)
         activateReload(recyclerView)
+        activateFilter()
     }
 
     override fun onCreateView(
