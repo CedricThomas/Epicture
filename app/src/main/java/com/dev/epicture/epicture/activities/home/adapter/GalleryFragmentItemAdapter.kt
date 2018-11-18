@@ -20,7 +20,9 @@ import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.gallery_animated_item.view.*
 import kotlinx.android.synthetic.main.gallery_image_item.view.*
 
-
+/**
+ * gallery fragment adapter
+ */
 class GalleryFragmentItemAdapter(
     private var imagesFull: ArrayList<ImageModel>,
     private val context: Context,
@@ -44,12 +46,18 @@ class GalleryFragmentItemAdapter(
         })
     }
 
+    /**
+     * Image holder
+     */
     inner class ImageHolder (view: View) : SelectableHolder(view) {
         override val selectToggle: ToggleButton = view.gallery_image_select_toggle
         val imageView: ImageView = view.gallery_image_preview
         val textView: TextView = view.gallery_image_title
     }
 
+    /**
+     * Animated holder
+     */
     inner class AnimatedHolder(view: View) : SelectableHolder(view) {
         override val selectToggle: ToggleButton = view.gallery_animated_select_toggle
         val videoView: VideoView = view.gallery_animated_preview
@@ -77,6 +85,9 @@ class GalleryFragmentItemAdapter(
         return images.size
     }
 
+    /**
+     * Bind and configure an image holder
+     */
     private fun bindImageHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : ImageHolder = rawHolder as ImageHolder
@@ -111,6 +122,9 @@ class GalleryFragmentItemAdapter(
         }
     }
 
+    /**
+     * Bind and configure an animated holder
+     */
     private fun bindAnimatedHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : AnimatedHolder = rawHolder as AnimatedHolder
@@ -148,6 +162,9 @@ class GalleryFragmentItemAdapter(
         }
     }
 
+    /**
+     * auto-select subtype bind
+     */
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
         if (getItemViewType(position) == animatedType)
             bindAnimatedHolder(rawHolder, position)
@@ -155,6 +172,9 @@ class GalleryFragmentItemAdapter(
             bindImageHolder(rawHolder, position)
     }
 
+    /**
+     * return a filter redefining images with a title and description filter
+     */
     override fun getFilter(): Filter {
         return object : Filter() {
 
@@ -186,6 +206,9 @@ class GalleryFragmentItemAdapter(
         }
     }
 
+    /**
+     * redefine images with a type filter
+     */
     override fun filter(type: ImgurType) {
         val filter: (ImageModel) -> Boolean  = when (type) {
             ImgurType.ALL -> {{

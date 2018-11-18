@@ -1,0 +1,111 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SelectableAdapter - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">com.dev.epicture.epicture.activities.home.adapter</a>&nbsp;/&nbsp;<a href="./index.html">SelectableAdapter</a><br/>
+<br/>
+<h1>SelectableAdapter</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">SelectableAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Adapter</span><span class="symbol">&lt;</span><a href="-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a><span class="symbol">&gt;</span></code>
+<p>Abstract class allowing to create a selectable adapter</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-selectable-holder/index.html">SelectableHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">SelectableHolder</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">ViewHolder</span></code>
+<p>Abstract selectable model</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">SelectableAdapter</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$<init>(kotlin.Function2((com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Boolean)))/selectActivator">selectActivator</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="./index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">,</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-selectable-model/index.html"><span class="identifier">SelectableModel</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span></code>
+<p>Abstract class allowing to create a selectable adapter</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="selecting.html">selecting</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">selecting</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>select mode</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="activate-select.html">activateSelect</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">activateSelect</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/view">view</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/holder">holder</span><span class="symbol">:</span>&nbsp;<a href="-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/model">model</span><span class="symbol">:</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-selectable-model/index.html"><span class="identifier">SelectableModel</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>activate the select mode on the holder</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="filter.html">filter</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">filter</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$filter(com.dev.epicture.epicture.services.imgur.models.ImgurType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-imgur-type/index.html"><span class="identifier">ImgurType</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Allow to filter a specific Imgur resource type</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-favorites-fragment-item-adapter/index.html">FavoritesFragmentItemAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">FavoritesFragmentItemAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/widget/Filterable.html"><span class="identifier">Filterable</span></a></code>
+<p>favorite fragment adapter</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-gallery-fragment-item-adapter/index.html">GalleryFragmentItemAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">GalleryFragmentItemAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/widget/Filterable.html"><span class="identifier">Filterable</span></a></code>
+<p>gallery fragment adapter</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="../-search-fragment-item-adapter/index.html">SearchFragmentItemAdapter</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">SearchFragmentItemAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/widget/Filterable.html"><span class="identifier">Filterable</span></a></code>
+<p>search fragment adapter</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

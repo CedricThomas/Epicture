@@ -1,5 +1,8 @@
 package com.dev.epicture.epicture.services.imgur
 
+/**
+ * ImgurService config
+ */
 class Config {
 
     companion object {

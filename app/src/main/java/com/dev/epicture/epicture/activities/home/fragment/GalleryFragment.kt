@@ -7,11 +7,16 @@ import com.dev.epicture.epicture.activities.home.HomeActivity
 
 import com.dev.epicture.epicture.activities.home.HomeActivity.ActionMenuManager
 
+/**
+ * Abstract Fragment binding menuManager and search method (only usable in HomeActvity)
+ */
 open class GalleryFragment : Fragment() {
 
     lateinit var menuManager: ActionMenuManager
 
-    // Link searchView with the gallery fragment searchListener
+    /**
+     *  Link searchView with the gallery fragment searchListener and get menuManager from Home activity
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activity = (activity as HomeActivity)
@@ -19,7 +24,9 @@ open class GalleryFragment : Fragment() {
         menuManager.search.setOnQueryTextListener(getSearchListener())
     }
 
-    // Allow to use an unified searchListener method
+    /**
+     *  Allow to use an unified searchListener method
+     */
     open fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

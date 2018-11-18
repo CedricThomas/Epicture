@@ -11,12 +11,25 @@ import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import com.dev.epicture.epicture.services.imgur.models.ImgurType
 
 
+/**
+ * Abstract class allowing to create a selectable adapter
+ */
 abstract class SelectableAdapter(
     private val selectActivator: (SelectableAdapter, SelectableModel) -> Boolean
 ): RecyclerView.Adapter<SelectableAdapter.SelectableHolder>() {
 
+    /**
+     * select mode
+     */
     var selecting : Boolean = false
 
+    /**
+     * activate the select mode on the holder
+     * @param view: view that will activate the selecting mode
+     * @param holder: holder impacted on selection mode switch
+     * @param model: model impacted on selection mode switch
+     * @param callback: callback called on selection status changed on the item (visual effect purpose only)
+     */
     protected fun activateSelect(view: View, holder: SelectableHolder, model: SelectableModel, callback: (Boolean) -> Unit) {
 
         view.setOnLongClickListener {
@@ -57,6 +70,9 @@ abstract class SelectableAdapter(
 
     }
 
+    /**
+     * Abstract selectable model
+     */
     abstract inner class SelectableHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         abstract val selectToggle : ToggleButton
@@ -81,5 +97,8 @@ abstract class SelectableAdapter(
 
     }
 
+    /**
+     * Allow to filter a specific Imgur resource type
+     */
     abstract fun filter(type: ImgurType)
 }

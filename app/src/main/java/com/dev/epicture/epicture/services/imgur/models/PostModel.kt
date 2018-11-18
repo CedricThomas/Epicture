@@ -3,11 +3,17 @@ package com.dev.epicture.epicture.services.imgur.models
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 
+/**
+ * post real type
+ */
 enum class PostType {
     GalleryImage,
     Album
 }
 
+/**
+ * Unify albumModel and GallryImageModel under one common class storing the real base type
+ */
 data class PostModel(
     val id: String?,
     val title: String?,
@@ -24,8 +30,9 @@ data class PostModel(
 ) : SelectableModel()
 
 
-// Convert JsonElement to PostModel using AlbumModel and GalleryImageModel
-
+/**
+ * Convert JsonElement to PostModel using AlbumModel and GalleryImageModel
+ */
 class PostUtils {
 
     companion object {

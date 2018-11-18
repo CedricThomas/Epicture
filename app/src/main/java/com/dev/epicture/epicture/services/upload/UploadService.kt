@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.content.ContextCompat.startActivity
@@ -16,6 +15,11 @@ object UploadService {
     private val PICK_IMAGE = 1
     private val CAMERA_IMAGE = 2
 
+    /**
+     * Start a gallery selection intent with tag PICK_IMAGE
+     *
+     *  @param activity : Activity catching the selection result
+     */
     fun choose(activity: Activity) {
         val intent = Intent()
         intent.type = "image/*"
@@ -23,6 +27,11 @@ object UploadService {
         startActivityForResult(activity, Intent.createChooser(intent, "Select Picture"), PICK_IMAGE, null)
     }
 
+    /**
+     * Start a camera capture intent with tag CAMERA_IMAGE
+     *
+     *  @param activity : Activity catching the selection result
+     */
     fun camera(activity: Activity) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(activity.packageManager)?.also {
@@ -31,6 +40,12 @@ object UploadService {
         }
     }
 
+    /**
+     * Launch the uploadActivity with the filename needed to be upload as parameter
+     *
+     *  @param context : Base context of intent creation
+     *  @param filename : Name of the file to upload stored in the stockage
+     */
     private fun startNewUploadActivity(context: Context, filename: String) {
 
         val intent = Intent(context, UploadActivity::class.java)
@@ -38,6 +53,12 @@ object UploadService {
         startActivity(context, intent, null)
     }
 
+    /**
+     * start the upload of an image by opening the uploadActivity
+     *
+     *  @param context : Base context of intent creation
+     *  @param imageBitmap : Image to upload
+     */
     private fun startUpload(context: Context, imageBitmap : Bitmap) {
 
         //Write file
@@ -51,6 +72,10 @@ object UploadService {
         startNewUploadActivity(context, filename)
     }
 
+    /**
+     * Overload of onActivityResult of the calling Activity triggering upload
+     *
+     */
     fun onActivityResult(context: Context, requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK)
             return

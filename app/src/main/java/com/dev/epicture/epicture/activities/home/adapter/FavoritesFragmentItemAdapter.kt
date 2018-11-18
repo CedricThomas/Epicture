@@ -21,6 +21,9 @@ import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.post_animated_item.view.*
 import kotlinx.android.synthetic.main.post_image_item.view.*
 
+/**
+ * favorite fragment adapter
+ */
 class FavoritesFragmentItemAdapter(
     private val imagesFull: ArrayList<PostModel>,
     private val context: Context,
@@ -37,6 +40,9 @@ class FavoritesFragmentItemAdapter(
         this.recyclerView = recyclerView
     }
 
+    /**
+     * return Selected items
+     */
     fun getSelection(): ArrayList<PostModel> {
         if (!selecting)
             return ArrayList()
@@ -45,6 +51,9 @@ class FavoritesFragmentItemAdapter(
         })
     }
 
+    /**
+     * astract post holder
+     */
     abstract inner class PostHolder(view: View) : SelectableHolder(view) {
         abstract val titleView: TextView
         abstract val viewsView: TextView
@@ -52,6 +61,9 @@ class FavoritesFragmentItemAdapter(
         abstract val downView: TextView
     }
 
+    /**
+     * Image post holder
+     */
     inner class ImageHolder (view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_image_select_toggle
         override val titleView: TextView = view.post_image_title
@@ -61,6 +73,9 @@ class FavoritesFragmentItemAdapter(
         val imageView: ImageView = view.post_image_preview
     }
 
+    /**
+     * Animated post holder
+     */
     inner class AnimatedHolder(view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_animated_select_toggle
         override val titleView: TextView = view.post_animated_title
@@ -79,7 +94,9 @@ class FavoritesFragmentItemAdapter(
             imageType
     }
 
-    // Configure Image Holder
+    /**
+     * Create and configure the holder with the good type
+     */
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): SelectableHolder {
         return if (type == animatedType) {
             val view = LayoutInflater.from(context).inflate(R.layout.post_animated_item, parent, false)
@@ -96,6 +113,9 @@ class FavoritesFragmentItemAdapter(
         return images.size
     }
 
+    /**
+     * Common bind on post model
+     */
     private fun bindPostHolder(holder: PostHolder, position: Int) {
 
         // Activate title
@@ -112,6 +132,9 @@ class FavoritesFragmentItemAdapter(
         holder.viewsView.text = images[position].viewNb.toString()
     }
 
+    /**
+     * Bind and configure an image holder
+     */
     private fun bindImageHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : ImageHolder = rawHolder as ImageHolder
@@ -141,6 +164,9 @@ class FavoritesFragmentItemAdapter(
         }
     }
 
+    /**
+     * Bind and configure an animated holder
+     */
     private fun bindAnimatedHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : AnimatedHolder = rawHolder as AnimatedHolder
@@ -174,6 +200,9 @@ class FavoritesFragmentItemAdapter(
         }
     }
 
+    /**
+     * auto-select subtype bind
+     */
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
         if (getItemViewType(position) == animatedType)
             bindAnimatedHolder(rawHolder, position)
@@ -181,6 +210,9 @@ class FavoritesFragmentItemAdapter(
             bindImageHolder(rawHolder, position)
     }
 
+    /**
+     * return a filter redefining images with a title filter
+     */
     override fun getFilter(): Filter {
         return object : Filter() {
 
@@ -209,10 +241,12 @@ class FavoritesFragmentItemAdapter(
                 }
             }
         }
-
-
+        
     }
 
+    /**
+     * redefine images with a type filter
+     */
     override fun filter(type: ImgurType) {
         val filter: (PostModel) -> Boolean  = when (type) {
             ImgurType.ALL -> {{

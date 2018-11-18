@@ -1,0 +1,129 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PostModel - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">com.dev.epicture.epicture.services.imgur.models</a>&nbsp;/&nbsp;<a href="./index.html">PostModel</a><br/>
+<br/>
+<h1>PostModel</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">PostModel</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-selectable-model/index.html"><span class="identifier">SelectableModel</span></a></code>
+<p>Unify albumModel and GallryImageModel under one common class storing the real base type</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">PostModel</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/title">title</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/viewNb">viewNb</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/upNb">upNb</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/downNb">downNb</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/previewUrl">previewUrl</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/mp4Url">mp4Url</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/fullElement">fullElement</span><span class="symbol">:</span>&nbsp;<span class="identifier">JsonElement</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-post-type/index.html"><span class="identifier">PostType</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/favorite">favorite</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/vote">vote</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.services.imgur.models.PostModel$<init>(kotlin.String, kotlin.String, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.String, kotlin.String, com.google.gson.JsonElement, com.dev.epicture.epicture.services.imgur.models.PostType, kotlin.Boolean, kotlin.String, kotlin.Boolean)/is_album">is_album</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span></code>
+<p>Unify albumModel and GallryImageModel under one common class storing the real base type</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="down-nb.html">downNb</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">downNb</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="favorite.html">favorite</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">favorite</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="full-element.html">fullElement</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">fullElement</span><span class="symbol">: </span><span class="identifier">JsonElement</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="id.html">id</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">id</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="is_album.html">is_album</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">is_album</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="mp4-url.html">mp4Url</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">mp4Url</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="preview-url.html">previewUrl</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">previewUrl</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="title.html">title</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">title</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="type.html">type</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-post-type/index.html"><span class="identifier">PostType</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="up-nb.html">upNb</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">upNb</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="view-nb.html">viewNb</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">viewNb</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="vote.html">vote</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">vote</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-selectable-model/selected.html">selected</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">selected</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

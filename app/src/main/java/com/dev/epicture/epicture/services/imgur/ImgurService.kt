@@ -42,24 +42,40 @@ object ImgurService {
 
 
     // Credentials zone
-
+    /**
+     * Start a web asking for imgur Credentials
+     * @param context: Base context for the login Intent
+     */
     fun askCredentials(context: Context) {
         val url = "https://api.imgur.com/oauth2/authorize?client_id=$clientId&response_type=token"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(context, intent, null)
     }
 
+    /**
+     * Remove credential from prefKeys and disable auto login
+     */
     fun deleteCredentials() {
         val editor= PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext).edit()
         editor.clear().apply()
     }
 
+    /**
+     * Try to load credentials from prefs and refresh token on success (authenticated on success)
+     * @param resolve: resolve callback on success
+     * @param reject: reject callback on failure
+     */
     fun loadCredentials(resolve: () -> Unit, reject: () -> Unit) {
         if (!loadFromPrefs())
             return reject()
         refreshCredentials(resolve, reject)
     }
 
+    /**
+     * Try to load credentials from prefs and store all the mandatory keys in variable informations
+     *
+     * @return: true on success, false on failure
+     */
     private fun loadFromPrefs(): Boolean {
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext)
         for (key in prefKeys) {
@@ -73,6 +89,9 @@ object ImgurService {
         return true
     }
 
+    /**
+     * Save needed keys of informations in prefKeys
+     */
     private fun saveInPrefs() {
         val editor= PreferenceManager.getDefaultSharedPreferences(MyApplication.appContext).edit()
         for (key in prefKeys) {
@@ -81,6 +100,9 @@ object ImgurService {
         editor.apply()
     }
 
+    /**
+     * Load intent result in informations and save credentials in prefKeys (authenticated on success)
+     */
     fun registerCredentials(intent: Intent){
         val queryData = intent.dataString!!.split('#')[1]
         for (raw in queryData.split("&")) {
@@ -91,6 +113,11 @@ object ImgurService {
         authenticated = true
     }
 
+    /**
+     * refresh credentials on Imgur
+     * @param reject: failure callback
+     * @param resolve: success callback
+     */
     private fun refreshCredentials(resolve: () -> Unit, reject: () -> Unit) {
 
         val url = HttpUrl.Builder()
@@ -133,7 +160,14 @@ object ImgurService {
         })
     }
 
-    // vote
+
+    /**
+     * vote for a post on Imgur (authenticated method)
+     * @param reject: failure callback => (JsonElement : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param id: post id to vote for
+     * @param action: vote status
+     */
     fun vote(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -160,7 +194,12 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
-    // get Images
+    /**
+     * Get logged user personnal images on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param page: page id of the images gallery to be loaded
+     */
     fun getImages(resolve: (BasicImgurResponseModel<ArrayList<ImageModel>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -185,7 +224,12 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // get Favorite
+    /**
+     * Get logged user favorites post on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param page: page id of the images gallery to be loaded
+     */
     fun getFavorite(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit, page: String = "") {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -210,7 +254,15 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // Search
+    /**
+     * search for post post on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param page: page id of the images gallery to be loaded
+     * @param query: imgur search query
+     * @param sort: sort of the results (default: time) (options : viral | top | time | rising)
+     * @param window: window/scope of the results (default: all) (options : day | week | month | year | all)
+     */
     fun search(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit, query: String,
                page: String = "0", sort: String = "time", window: String = "all") {
         if (!authenticated)
@@ -238,7 +290,15 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // get a gallery
+    /**
+     * Get gallery posts on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param page: page id of the images gallery to be loaded
+     * @param section: section of the results (default: hot) (options : hot | top | user)
+     * @param sort: sort of the results (default: viral) (options : viral | top | time | rising)
+     * @param window: window/scope of the results (default: day) (options : day | week | month | year | all)
+     */
     fun getGallery(resolve: (BasicImgurResponseModel<ArrayList<JsonElement>>) -> Unit, reject: (Exception) -> Unit,
                   page: String = "0", section: String = "hot", sort: String = "viral", window: String = "day") {
         if (!authenticated)
@@ -266,7 +326,12 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // get custom AvatarModel
+
+    /**
+     * Get logged user avatar on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     */
     fun getAvatar(resolve: (BasicImgurResponseModel<AvatarModel>) -> Unit, reject: (Exception) -> Unit) {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -295,7 +360,13 @@ object ImgurService {
         asyncLaunch(request!!, customResolve, reject)
     }
 
-    // delete User Image
+
+    /**
+     * Delete logged user images on Imgur (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param id: id of the image to be removed
+     */
     fun deleteImage(resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit, id: String) {
         if (!authenticated)
             throw IOException("You are not connected")
@@ -313,7 +384,12 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
-    // toggle Favorite on Image
+    /**
+     * Favorite an image for the logged user (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param id: id of the image to be fav/unfav
+     */
     fun favoriteImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -338,7 +414,13 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
-    // toggle Favorite on Album
+
+    /**
+     * Favorite an album for the logged user (authenticated method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param id: id of the album to be fav/unfav
+     */
     fun favoriteAlbum(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -363,7 +445,16 @@ object ImgurService {
         asyncLaunch(request!!, resolve, reject)
     }
 
-    // upload a Bitmap (Async)
+
+    /**
+     * Uplaod an image for the logged user (authenticated method) (async method)
+     * @param reject: failure callback => (BasicImgurResponseModel : success response)
+     * @param resolve: success callback => (Exception: call exception)
+     * @param title: title of the image to be upload
+     * @param description: description of the image to be upload
+     * @param name: name of the image to be upload
+     * @param image: Bitmap of the image to be upload
+     */
     fun uploadImage(
         resolve: (JsonElement) -> Unit,
         reject: (Exception) -> Unit,
@@ -387,7 +478,7 @@ object ImgurService {
             val body = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("image", "image.jpg",
-                    bitmapToByteArray(image)
+                    bitmapToBody(image)
                 )
                 .addFormDataPart("title", title)
                 .addFormDataPart("description", description)
@@ -402,6 +493,11 @@ object ImgurService {
 
     // Tools
 
+    /**
+     * Build a post request from url and body
+     * @param url: request url
+     * @param body: request body
+     */
     private fun POSTBuilder(url: HttpUrl, body: RequestBody): Request? {
         return Request.Builder()
             .url(url)
@@ -412,6 +508,10 @@ object ImgurService {
             .build()
     }
 
+    /**
+     * Build a get request from url
+     * @param url: request url
+     */
     private fun GETBuilder(url: HttpUrl): Request? {
         return Request.Builder()
             .url(url)
@@ -422,6 +522,10 @@ object ImgurService {
             .build()
     }
 
+    /**
+     * Build a delete request from url
+     * @param url: request url
+     */
     private fun DELETEBuilder(url: HttpUrl): Request? {
         return Request.Builder()
             .url(url)
@@ -432,13 +536,23 @@ object ImgurService {
             .build()
     }
 
-    private fun bitmapToByteArray(bmp: Bitmap): RequestBody {
+    /**
+     * Convert an image in request body
+     * @param bmp: image to put in boy
+     * @return request body for an image upload
+     */
+    private fun bitmapToBody(bmp: Bitmap): RequestBody {
         val byteArrayOutputStream = ByteArrayOutputStream()
         bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         return RequestBody.create(MediaType.parse("image/*jpg"), byteArrayOutputStream.toByteArray())
 
     }
 
+    /**
+     * Launch an async okhttp request and call the callback associated with the request status
+     * @param reject: failure callback
+     * @param request: success callback
+     */
     private fun asyncLaunch(request: Request, resolve: (JsonElement) -> Unit, reject: (Exception) -> Unit) {
 
         client.newCall(request).enqueue(object : Callback {

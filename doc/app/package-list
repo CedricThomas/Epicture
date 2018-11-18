@@ -1,0 +1,14 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+com.dev.epicture.epicture
+com.dev.epicture.epicture.activities.home
+com.dev.epicture.epicture.activities.home.adapter
+com.dev.epicture.epicture.activities.home.decorators
+com.dev.epicture.epicture.activities.home.fragment
+com.dev.epicture.epicture.activities.login
+com.dev.epicture.epicture.activities.upload
+com.dev.epicture.epicture.services.glide
+com.dev.epicture.epicture.services.imgur
+com.dev.epicture.epicture.services.imgur.models
+com.dev.epicture.epicture.services.upload

@@ -31,9 +31,15 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
 
-
+/**
+ * Home activity
+ * tiny Imgur client
+ */
 class HomeActivity : AppCompatActivity() {
 
+    /**
+     * Bottom navigation item selection listener
+     */
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
@@ -53,6 +59,9 @@ class HomeActivity : AppCompatActivity() {
         false
     }
 
+    /**
+     * Drawer item selection listener
+     */
     private val mOnDrawerItemSelectedListener = NavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.draw_logout -> {
@@ -68,6 +77,10 @@ class HomeActivity : AppCompatActivity() {
 
     private var animation = false
 
+    /**
+     * FAB menu toggle
+     * auto-toggle with set property
+     */
     private var addMenu: Boolean = false
         set(value) {
             if (value == addMenu || animation)
@@ -95,7 +108,9 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var searchView: SearchView
 
-    // ActionBar sharing class
+    /**
+     * ActionBar sharing class
+     */
     inner class ActionMenuManager(actionMenu: Menu, val supportActionBar: android.support.v7.app.ActionBar?) {
 
         val kill_search: MenuItem = actionMenu.findItem(R.id.action_kill_search)
@@ -128,12 +143,17 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    // Allow Fragments to get actionMenu
+    /**
+     *  Allow Fragments to get actionMenu
+     */
     fun getMenuManager(): ActionMenuManager {
         return ActionMenuManager(actionMenu, supportActionBar)
     }
 
-    // Change Fragment and reset actionBar
+    /**
+     *  Change Fragment and reset actionBar
+     *  @param fragment: fragment to set
+     */
     private fun setFragment(fragment: GalleryFragment) {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         val t = supportFragmentManager.beginTransaction()
@@ -141,7 +161,9 @@ class HomeActivity : AppCompatActivity() {
         t.commit()
     }
 
-    // Open drawer on click
+    /**
+     * Open drawer on menu click
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         return when (item?.itemId) {
@@ -153,7 +175,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // Setup actionBar with spinner and searchView
+    /**
+     *  Setup actionBar with spinner and searchView
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 
@@ -172,13 +196,21 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-    // Change Fragment after menu is prepared (mandatory)
+    /**
+     *  Change Fragment after menu is prepared (mandatory)
+     */
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         setFragment(SearchFragment())
         return super.onPrepareOptionsMenu(menu)
     }
 
-
+    /**
+     * Up animation wrapper
+     * @param view: view to animate
+     * @param dist: distance travelled by the view (on Y)
+     * @param alpha: alpha transition value
+     * @param onAnimationEnd: animation end callback
+     */
     private fun fade(view: View?, dist: Float, alpha: Float, onAnimationEnd: () -> Unit) {
         view?.animate()
             ?.translationYBy(dist)
@@ -194,14 +226,18 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    // Remove FAB on click
+    /**
+     *  Remove FAB focus loose
+     */
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (addMenu)
             addMenu = !addMenu
         return super.dispatchTouchEvent(ev)
     }
 
-    // Configure actionBar
+    /**
+     *  Configure actionBar
+     */
     private fun setupActionBar() {
         val toolbar = findViewById<Toolbar>(R.id.action_bar)
         setSupportActionBar(toolbar)
@@ -217,7 +253,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // Configure FAB
+    /**
+     *  Configure FAB menu
+     */
     private fun setupFAB() {
         fab.setOnClickListener {
             addMenu = !addMenu
@@ -227,7 +265,9 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    // Configure Drawer Avatar
+    /**
+     *  Configure Drawer Avatar
+     */
     private fun setupAvatar() {
         ImgurService.getAvatar({it ->
             runOnUiThread {
@@ -237,7 +277,9 @@ class HomeActivity : AppCompatActivity() {
         },{})
     }
 
-    // Call setup methods
+    /**
+     *  Call setup methods
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -246,7 +288,9 @@ class HomeActivity : AppCompatActivity() {
         setupAvatar()
     }
 
-
+    /**
+     * remove searchView on backPressed
+     */
     override fun onBackPressed() {
         if (!searchView.isIconified) {
             searchView.isIconified = true
@@ -255,7 +299,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Trigger upload activity on FAB menu result
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         UploadService.onActivityResult(this, requestCode, resultCode, data)
     }

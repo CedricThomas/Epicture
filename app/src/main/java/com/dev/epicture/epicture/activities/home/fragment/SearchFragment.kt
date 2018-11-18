@@ -17,13 +17,22 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.fragment_gallery_search.*
 
-
+/**
+ * Imgur search view with up, down and fav management
+ * by default showing the Imgur trends
+ */
 class SearchFragment : GalleryFragment() {
 
+    /**
+     * Post loaded
+     */
     private var images: ArrayList<PostModel> = ArrayList()
     private lateinit var adapter: SearchFragmentItemAdapter
     private lateinit var fragView: View
     private var loading: Boolean = false
+    /**
+     * Auto switch mod between search and trends on set
+     */
     private var searching: Boolean = false
         set(value) {
             val old = field
@@ -34,16 +43,23 @@ class SearchFragment : GalleryFragment() {
                 loadActivePages(recycler_view, menuManager.supportActionBar?.title.toString())
             }
         }
+    /**
+     * Max loaded page
+     */
     private var page: Int = 0
 
-    // activate / deactivate selection mode on action bar
+    /**
+     * activate / deactivate selection mode on action bar
+     */
     private fun setSelectionMode(status: Boolean)  {
         menuManager.favorite.isVisible = status
         menuManager.cancel.isVisible = status
         menuManager.refresh.isVisible = !status
     }
 
-    // Cancel selection in adapter
+    /**
+     * Cancel selection in adapter
+     */
     private fun cancelSelection() {
         val selected = adapter.getSelection()
         selected.forEach { image ->
@@ -54,7 +70,9 @@ class SearchFragment : GalleryFragment() {
         adapter.notifyDataSetChanged()
     }
 
-    // Favorite activation
+    /**
+     * Favorite activation
+     */
     private fun activateFavorite() {
         menuManager.favorite.setOnMenuItemClickListener {
             val selected = adapter.getSelection()
@@ -66,7 +84,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // KillSearch Activation
+    /**
+     * KillSearch Activation
+     */
     private fun activateKillSearch() {
         menuManager.kill_search.setOnMenuItemClickListener {
             menuManager.kill_search.isVisible = false
@@ -79,9 +99,13 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // Reload Activation
+    /**
+     * Reload Activation
+     */
     private fun activateReload(recyclerView: RecyclerView) {
-        // Reload activation
+        /**
+         * Reload activation
+         */
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
             loadActivePages(recyclerView, menuManager.supportActionBar?.title.toString())
@@ -89,7 +113,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // Cancel activation
+    /**
+     * Cancel activation
+     */
     private fun activateCancelSelection() {
         menuManager.cancel.setOnMenuItemClickListener {
             cancelSelection()
@@ -97,7 +123,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // Infinite scroll activation
+    /**
+     * Infinite scroll activation
+     */
     private fun activateInfiniteScroll(recyclerView: RecyclerView) {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -123,7 +151,9 @@ class SearchFragment : GalleryFragment() {
         })
     }
 
-    // callback to activate Imgur functions (upvote downvote favorite)
+    /**
+     * callback to activate Imgur functions (upvote downvote favorite)
+     */
     private fun activateViewActions(imgurAction: ImgurAction, model: PostModel) {
         val smartVote = {vote: String -> ImgurService.vote({}, {}, model.id!!, vote)}
         when (imgurAction) {
@@ -134,7 +164,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // load all active pages in images (with search and trends ) => c.f. searching
+    /**
+     * load all active pages in images (with search and trends ) => c.f. searching
+     */
     private fun loadActivePages(recyclerView: RecyclerView, query: String) {
         if (loading)
             return
@@ -156,7 +188,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // configure RecyclerView and active actionBar actions
+    /**
+     * configure RecyclerView and active actionBar actions
+     */
     private fun createRecyclerView() {
 
         adapter = SearchFragmentItemAdapter(images, context!!, {a, b -> activateViewActions(a, b)}) { adapter, model ->
@@ -182,7 +216,9 @@ class SearchFragment : GalleryFragment() {
         activateFavorite()
     }
 
-    // configure recycler view and inflate view
+    /**
+     * configure recycler view and inflate view
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -192,7 +228,9 @@ class SearchFragment : GalleryFragment() {
         return fragView
     }
 
-    // load Trends
+    /**
+     * load Trends
+     */
     private fun loadGallery(page: Int = 0, section: String = "hot", sort: String = "viral", window: String = "day", callback: () -> Unit = {}) {
         ImgurService.getGallery({ resp ->
             try {
@@ -210,7 +248,9 @@ class SearchFragment : GalleryFragment() {
     }
 
 
-    // search Images
+    /**
+     * search Images
+     */
     private fun searchImage(query: String,
                             page: Int, sort: String = "time", window: String = "all", callback: () -> Unit = {}) {
         ImgurService.search({ resp ->
@@ -228,7 +268,9 @@ class SearchFragment : GalleryFragment() {
         }, query, page.toString(), sort, window)
     }
 
-    // delete select item from array
+    /**
+     * delete select item from array
+     */
     private fun favorites(images: ArrayList<PostModel>) {
         for (image in images) {
             if (image.is_album)
@@ -238,7 +280,9 @@ class SearchFragment : GalleryFragment() {
         }
     }
 
-    // add a search listener custom
+    /**
+     * add a search listener custom
+     */
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

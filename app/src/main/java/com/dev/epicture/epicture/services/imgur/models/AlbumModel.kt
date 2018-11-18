@@ -1,5 +1,8 @@
 package com.dev.epicture.epicture.services.imgur.models
 
+/**
+ * imgur Album model
+ */
 data class AlbumModel(
     val id : String?,
     val link: String?,

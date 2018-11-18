@@ -6,6 +6,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'org.jetbrains.dokka-android'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -24,6 +26,10 @@ android {
         }
     }
     productFlavors {
+    }
+    dokka {
+        outputFormat = 'html'
+        outputDirectory = "$buildDir/javadoc"
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/color'] } }
 }

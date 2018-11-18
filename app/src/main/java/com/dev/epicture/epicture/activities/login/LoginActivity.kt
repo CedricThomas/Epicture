@@ -12,10 +12,14 @@ import com.dev.epicture.epicture.R
 import com.dev.epicture.epicture.activities.home.HomeActivity
 import com.dev.epicture.epicture.services.imgur.ImgurService
 
-
+/**
+ * Imgur login activity
+ */
 class LoginActivity : AppCompatActivity() {
 
-    // Setup the first connection
+    /**
+     *  Setup the first Imgur connection
+     */
     private fun setupFirstConnection() {
 
         val button = findViewById<Button>(R.id.button)
@@ -34,13 +38,20 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    // Change activity
+    /**
+     * start HomeActivity
+     */
     private fun galleryAccess() {
         val newIntent = Intent(this, HomeActivity::class.java)
         startActivity(newIntent)
         finish()
     }
 
+    /**
+     * Try to login on Imgur
+     * success : launch gallery
+     * failure : bind button on Imgur web view connection
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

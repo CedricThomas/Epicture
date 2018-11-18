@@ -1,0 +1,171 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SearchFragmentItemAdapter - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">com.dev.epicture.epicture.activities.home.adapter</a>&nbsp;/&nbsp;<a href="./index.html">SearchFragmentItemAdapter</a><br/>
+<br/>
+<h1>SearchFragmentItemAdapter</h1>
+<code><span class="keyword">class </span><span class="identifier">SearchFragmentItemAdapter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-selectable-adapter/index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/widget/Filterable.html"><span class="identifier">Filterable</span></a></code>
+<p>search fragment adapter</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-animated-holder/index.html">AnimatedHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">AnimatedHolder</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-post-holder/index.html"><span class="identifier">PostHolder</span></a></code>
+<p>Animated post holder</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-image-holder/index.html">ImageHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">ImageHolder</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-post-holder/index.html"><span class="identifier">PostHolder</span></a></code>
+<p>Image post holder</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="-post-holder/index.html">PostHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">PostHolder</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-selectable-adapter/-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a></code>
+<p>astract post holder</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">SearchFragmentItemAdapter</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$<init>(java.util.ArrayList((com.dev.epicture.epicture.services.imgur.models.PostModel)), android.content.Context, kotlin.Function2((com.dev.epicture.epicture.services.imgur.models.ImgurAction, com.dev.epicture.epicture.services.imgur.models.PostModel, kotlin.Unit)), kotlin.Function2((com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Boolean)))/imagesFull">imagesFull</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-array-list/index.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../../com.dev.epicture.epicture.services.imgur.models/-post-model/index.html"><span class="identifier">PostModel</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$<init>(java.util.ArrayList((com.dev.epicture.epicture.services.imgur.models.PostModel)), android.content.Context, kotlin.Function2((com.dev.epicture.epicture.services.imgur.models.ImgurAction, com.dev.epicture.epicture.services.imgur.models.PostModel, kotlin.Unit)), kotlin.Function2((com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Boolean)))/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$<init>(java.util.ArrayList((com.dev.epicture.epicture.services.imgur.models.PostModel)), android.content.Context, kotlin.Function2((com.dev.epicture.epicture.services.imgur.models.ImgurAction, com.dev.epicture.epicture.services.imgur.models.PostModel, kotlin.Unit)), kotlin.Function2((com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Boolean)))/actionActivator">actionActivator</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../../com.dev.epicture.epicture.services.imgur.models/-imgur-action/index.html"><span class="identifier">ImgurAction</span></a><span class="symbol">,</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-post-model/index.html"><span class="identifier">PostModel</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$<init>(java.util.ArrayList((com.dev.epicture.epicture.services.imgur.models.PostModel)), android.content.Context, kotlin.Function2((com.dev.epicture.epicture.services.imgur.models.ImgurAction, com.dev.epicture.epicture.services.imgur.models.PostModel, kotlin.Unit)), kotlin.Function2((com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Boolean)))/selectActivator">selectActivator</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../-selectable-adapter/index.html"><span class="identifier">SelectableAdapter</span></a><span class="symbol">,</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-selectable-model/index.html"><span class="identifier">SelectableModel</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span></code>
+<p>search fragment adapter</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="images.html">images</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">images</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-array-list/index.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../../com.dev.epicture.epicture.services.imgur.models/-post-model/index.html"><span class="identifier">PostModel</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-selectable-adapter/selecting.html">selecting</a></p>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">selecting</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>select mode</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="filter.html">filter</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">filter</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$filter(com.dev.epicture.epicture.services.imgur.models.ImgurType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-imgur-type/index.html"><span class="identifier">ImgurType</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>empty filter on search adapter (no content filter)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-filter.html">getFilter</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getFilter</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/widget/Filter.html"><span class="identifier">Filter</span></a></code>
+<p>empty filter on search adapter (managed by fragment)</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-item-count.html">getItemCount</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getItemCount</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-item-view-type.html">getItemViewType</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getItemViewType</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$getItemViewType(kotlin.Int)/position">position</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-selection.html">getSelection</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getSelection</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-array-list/index.html"><span class="identifier">ArrayList</span></a><span class="symbol">&lt;</span><a href="../../com.dev.epicture.epicture.services.imgur.models/-post-model/index.html"><span class="identifier">PostModel</span></a><span class="symbol">&gt;</span></code>
+<p>return Selected items</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-attached-to-recycler-view.html">onAttachedToRecyclerView</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onAttachedToRecyclerView</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$onAttachedToRecyclerView(android.support.v7.widget.RecyclerView)/recyclerView">recyclerView</span><span class="symbol">:</span>&nbsp;<span class="identifier">RecyclerView</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="on-bind-view-holder.html">onBindViewHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onBindViewHolder</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$onBindViewHolder(com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, kotlin.Int)/rawHolder">rawHolder</span><span class="symbol">:</span>&nbsp;<a href="../-selectable-adapter/-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$onBindViewHolder(com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, kotlin.Int)/position">position</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>auto-select subtype bind</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="on-create-view-holder.html">onCreateViewHolder</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">onCreateViewHolder</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$onCreateViewHolder(android.view.ViewGroup, kotlin.Int)/parent">parent</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/ViewGroup.html"><span class="identifier">ViewGroup</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SearchFragmentItemAdapter$onCreateViewHolder(android.view.ViewGroup, kotlin.Int)/type">type</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-selectable-adapter/-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a></code>
+<p>Create and configure the holder with the good type</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inherited Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-selectable-adapter/activate-select.html">activateSelect</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">activateSelect</span><span class="symbol">(</span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/view">view</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/holder">holder</span><span class="symbol">:</span>&nbsp;<a href="../-selectable-adapter/-selectable-holder/index.html"><span class="identifier">SelectableHolder</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/model">model</span><span class="symbol">:</span>&nbsp;<a href="../../com.dev.epicture.epicture.services.imgur.models/-selectable-model/index.html"><span class="identifier">SelectableModel</span></a><span class="symbol">, </span><span class="identifier" id="com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter$activateSelect(android.view.View, com.dev.epicture.epicture.activities.home.adapter.SelectableAdapter.SelectableHolder, com.dev.epicture.epicture.services.imgur.models.SelectableModel, kotlin.Function1((kotlin.Boolean, kotlin.Unit)))/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>activate the select mode on the holder</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

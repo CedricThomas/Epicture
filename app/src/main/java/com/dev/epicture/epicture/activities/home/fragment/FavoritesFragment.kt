@@ -19,15 +19,26 @@ import com.google.gson.JsonElement
 import kotlinx.android.synthetic.main.fragment_gallery_favorites.*
 
 
+/**
+ * Imgur Favorite post viewer and editor
+ */
 class FavoritesFragment : GalleryFragment() {
 
+    /**
+     * Post loaded
+     */
     private var images: ArrayList<PostModel> = ArrayList()
     private lateinit var adapter: FavoritesFragmentItemAdapter
     private lateinit var fragView: View
     private var loading: Boolean = false
+    /**
+     * Max page loaded
+     */
     private var page: Int = 0
 
-    // activate / deactivate selection mode on action bar
+    /**
+     * activate / deactivate selection mode on action bar
+     */
     private fun setSelectionMode(status: Boolean)  {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
@@ -35,7 +46,9 @@ class FavoritesFragment : GalleryFragment() {
         menuManager.spinnerItem.isVisible = !status
     }
 
-    // Filter Activation
+    /**
+     * Filter Activation
+     */
     private fun activateFilter() {
         menuManager.spinner.visibility = View.VISIBLE
         menuManager.spinnerItem.isVisible = true
@@ -58,9 +71,13 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // Reload Activation
+    /**
+     * Reload Activation
+     */
     private fun activateReload(recyclerView: RecyclerView) {
-        // Reload activation
+        /**
+         * Reload activation
+         */
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
             loadActivePages(recyclerView)
@@ -68,7 +85,9 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // Delete activation
+    /**
+     * Delete activation
+     */
     private fun activateDelete() {
         menuManager.delete.setOnMenuItemClickListener {
             val removed = adapter.getSelection()
@@ -83,7 +102,9 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // Cancel activation
+    /**
+     * Cancel activation
+     */
     private fun activateCancelSelection() {
         menuManager.cancel.setOnMenuItemClickListener {
             val selected = adapter.getSelection()
@@ -97,7 +118,9 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // Infinite scroll activation
+    /**
+     * Infinite scroll activation
+     */
     private fun activateInfiniteScroll(recyclerView: RecyclerView) {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -119,7 +142,9 @@ class FavoritesFragment : GalleryFragment() {
         })
     }
 
-    // detect if view is empty and set / unset placeholder
+    /**
+     * detect if view is empty and set / unset placeholder
+     */
     private fun updateEmptyImage() {
         if (images.isEmpty()) {
             recycler_view.visibility = View.GONE
@@ -131,7 +156,9 @@ class FavoritesFragment : GalleryFragment() {
 
     }
 
-    // load all active pages in images
+    /**
+     * load all active pages in images
+     */
     private fun loadActivePages(recyclerView: RecyclerView) {
         if (loading)
             return
@@ -149,7 +176,9 @@ class FavoritesFragment : GalleryFragment() {
             }
     }
 
-    // configure RecyclerView and active actionBar actions
+    /**
+     * configure RecyclerView and active actionBar actions
+     */
     private fun createRecyclerView() {
 
         adapter = FavoritesFragmentItemAdapter(images, context!!) { adapter, model ->
@@ -175,7 +204,9 @@ class FavoritesFragment : GalleryFragment() {
         activateFilter()
     }
 
-    // configure recycler view and inflate view
+    /**
+     * configure recycler view and inflate view
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -185,7 +216,9 @@ class FavoritesFragment : GalleryFragment() {
         return fragView
     }
 
-    // load imgur favorites page in images and call callback at end
+    /**
+     * load imgur favorites page in images and call callback at end
+     */
     private fun loadFavoritePage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getFavorite({ resp ->
             try {
@@ -202,7 +235,9 @@ class FavoritesFragment : GalleryFragment() {
         }, page.toString())
     }
 
-    // delete select item from array on imgur
+    /**
+     * delete select item from array on imgur
+     */
     private fun deleteFavorites(images: ArrayList<PostModel>) {
         for (image in images) {
             if (image.is_album)
@@ -212,7 +247,9 @@ class FavoritesFragment : GalleryFragment() {
         }
     }
 
-    // add a search listener mapped on adapter filter
+    /**
+     * add a search listener mapped on adapter filter
+     */
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 

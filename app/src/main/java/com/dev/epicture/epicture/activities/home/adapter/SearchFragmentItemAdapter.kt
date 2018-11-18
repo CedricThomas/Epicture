@@ -21,6 +21,9 @@ import com.dev.epicture.epicture.services.imgur.models.SelectableModel
 import kotlinx.android.synthetic.main.post_animated_item.view.*
 import kotlinx.android.synthetic.main.post_image_item.view.*
 
+/**
+ * search fragment adapter
+ */
 class SearchFragmentItemAdapter(
     imagesFull: ArrayList<PostModel>,
     private val context: Context,
@@ -31,12 +34,16 @@ class SearchFragmentItemAdapter(
     private val imageType = 1
     private val animatedType = 2
     var images = imagesFull
+
     private lateinit var recyclerView: RecyclerView
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
     }
 
+    /**
+     * return Selected items
+     */
     fun getSelection(): ArrayList<PostModel> {
         if (!selecting)
             return ArrayList()
@@ -45,6 +52,9 @@ class SearchFragmentItemAdapter(
         })
     }
 
+    /**
+     * astract post holder
+     */
     abstract inner class PostHolder(view: View) : SelectableHolder(view) {
         abstract val titleView: TextView
         abstract val viewsView: TextView
@@ -55,6 +65,9 @@ class SearchFragmentItemAdapter(
         abstract val favorite: ToggleButton
     }
 
+    /**
+     * Image post holder
+     */
     inner class ImageHolder(view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_image_select_toggle
         override val titleView: TextView = view.post_image_title
@@ -67,6 +80,9 @@ class SearchFragmentItemAdapter(
         override val downImage: ImageView = view.post_image_down
     }
 
+    /**
+     * Animated post holder
+     */
     inner class AnimatedHolder(view: View) : PostHolder(view) {
         override val selectToggle: ToggleButton = view.post_animated_select_toggle
         override val titleView: TextView = view.post_animated_title
@@ -88,7 +104,9 @@ class SearchFragmentItemAdapter(
             imageType
     }
 
-    // Configure Image Holder
+    /**
+     * Create and configure the holder with the good type
+     */
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): SelectableHolder {
         return if (type == animatedType) {
             val view = LayoutInflater.from(context).inflate(R.layout.post_animated_item, parent, false)
@@ -103,12 +121,18 @@ class SearchFragmentItemAdapter(
         return images.size
     }
 
+    /**
+     * activate favorite click on holder (based on action callback)
+     */
     private fun activateFavorite(holder: PostHolder, position: Int) {
         holder.favorite.setOnClickListener {
             actionActivator(ImgurAction.FAVORITE, images[position])
         }
     }
 
+    /**
+     * activate down click on holder (based on action callback)
+     */
     private fun activateDown(holder: PostHolder, position: Int) {
         holder.downImage.setOnClickListener {
             if (images[position].vote == "down") {
@@ -130,6 +154,9 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    /**
+     * activate up click on holder (based on action callback)
+     */
     private fun activateUp(holder: PostHolder, position: Int) {
         holder.upImage.setOnClickListener {
             if (images[position].vote == "up") {
@@ -151,6 +178,9 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    /**
+     * Common bind on post model
+     */
     private fun bindPostHolder(holder: PostHolder, position: Int) {
 
         // Activate title
@@ -177,6 +207,9 @@ class SearchFragmentItemAdapter(
         activateFavorite(holder, position)
     }
 
+    /**
+     * Bind and configure an image holder
+     */
     private fun bindImageHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : ImageHolder = rawHolder as ImageHolder
@@ -206,6 +239,9 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    /**
+     * Bind and configure an animated holder
+     */
     private fun bindAnimatedHolder(rawHolder: SelectableHolder, position: Int) {
         try {
             val holder : AnimatedHolder = rawHolder as AnimatedHolder
@@ -239,6 +275,9 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    /**
+     * auto-select subtype bind
+     */
     override fun onBindViewHolder(rawHolder: SelectableHolder, position: Int) {
         if (getItemViewType(position) == animatedType)
             bindAnimatedHolder(rawHolder, position)
@@ -246,6 +285,9 @@ class SearchFragmentItemAdapter(
             bindImageHolder(rawHolder, position)
     }
 
+    /**
+     * empty filter on search adapter (managed by fragment)
+     */
     override fun getFilter(): Filter {
         return object : Filter() {
 
@@ -259,6 +301,9 @@ class SearchFragmentItemAdapter(
         }
     }
 
+    /**
+     * empty filter on search adapter (no content filter)
+     */
     override fun filter(type: ImgurType) {
     }
 }

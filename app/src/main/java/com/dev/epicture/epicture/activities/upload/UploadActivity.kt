@@ -12,8 +12,9 @@ import kotlinx.android.synthetic.main.activity_upload.*
 import android.graphics.BitmapFactory
 
 
-
-
+/**
+ * Imgur Upload Activity => form and image
+ */
 class UploadActivity : AppCompatActivity() {
 
     private lateinit var bitmap: Bitmap

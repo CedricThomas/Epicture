@@ -16,17 +16,28 @@ import com.dev.epicture.epicture.services.imgur.models.ImageModel
 import com.dev.epicture.epicture.services.imgur.models.ImgurType
 
 
+/**
+ * Imgur uploaded image viewer and editor
+ */
 class ImagesFragment : GalleryFragment() {
 
     private lateinit var fragView: View
     private lateinit var adapter: GalleryFragmentItemAdapter
+    /**
+     * images loaded
+     */
     private var images: ArrayList<ImageModel> = ArrayList()
     private var loading: Boolean = false
+    /**
+     * max page loaded
+     */
     private var page: Int = 0
     private var selectAllStatus = true
     private lateinit var recyclerView: RecyclerView
 
-    // activate / deactivate selection in ActionBar
+    /**
+     *  activate / deactivate selection in ActionBar
+     */
     private fun setSelectionMode(status: Boolean)  {
         menuManager.delete.isVisible = status
         menuManager.cancel.isVisible = status
@@ -34,7 +45,9 @@ class ImagesFragment : GalleryFragment() {
         menuManager.spinnerItem.isVisible = !status
     }
 
-    // Filter Activation
+    /**
+     * Filter Activation
+     */
     private fun activateFilter() {
 
         menuManager.spinnerItem.isVisible = true
@@ -58,9 +71,10 @@ class ImagesFragment : GalleryFragment() {
         }
     }
 
-    // Reload Activation
+    /**
+     * Reload Activation
+     */
     private fun activateReload(recyclerView: RecyclerView) {
-        // Reload activation
         menuManager.refresh.isVisible = true
         menuManager.refresh.setOnMenuItemClickListener {
             selectAllStatus = false
@@ -69,7 +83,9 @@ class ImagesFragment : GalleryFragment() {
         }
     }
 
-    // Delete activation
+    /**
+     * Delete activation
+     */
     private fun activateDelete() {
         menuManager.delete.setOnMenuItemClickListener {
             selectAllStatus = false
@@ -84,7 +100,9 @@ class ImagesFragment : GalleryFragment() {
         }
     }
 
-    // Cancel activation
+    /**
+     * Cancel activation
+     */
     private fun activateCancelSelection() {
         menuManager.cancel.setOnMenuItemClickListener {
             val selected = adapter.getSelection()
@@ -98,7 +116,9 @@ class ImagesFragment : GalleryFragment() {
         }
     }
 
-    // Infinite scroll activation
+    /**
+     * Infinite scroll activation
+     */
     private fun activateInfiniteScroll(recyclerView: RecyclerView) {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -120,7 +140,9 @@ class ImagesFragment : GalleryFragment() {
         })
     }
 
-    // load all active pages in images
+    /**
+     * load all active pages in images
+     */
     private fun loadActivePages(recyclerView: RecyclerView) {
         if (loading)
             return
@@ -137,7 +159,9 @@ class ImagesFragment : GalleryFragment() {
             }
     }
 
-    // configure RecyclerView and active actionBar actions
+    /**
+     * configure RecyclerView and active actionBar actions
+     */
     private fun createRecyclerView() {
 
         adapter = GalleryFragmentItemAdapter(images, context!!) { adapter, model ->
@@ -160,7 +184,9 @@ class ImagesFragment : GalleryFragment() {
         activateFilter()
     }
 
-    // configure recycler view and inflate view
+    /**
+     * configure recycler view and inflate view
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -170,7 +196,9 @@ class ImagesFragment : GalleryFragment() {
         return fragView
     }
 
-    // add a page in images array and call callback at end
+    /**
+     * add a page in images array and call callback at end
+     */
     private fun loadImagesPage(page: Int, callback: () -> Unit = {}) {
         ImgurService.getImages({ resp ->
             try {
@@ -187,7 +215,9 @@ class ImagesFragment : GalleryFragment() {
         }, page.toString())
     }
 
-    // delete select item from array on imgur
+    /**
+     * delete select item from array on imgur
+     */
     private fun deleteImages(images: ArrayList<ImageModel>) {
         for (image in images) {
             ImgurService.deleteImage({
@@ -198,7 +228,9 @@ class ImagesFragment : GalleryFragment() {
 
     }
 
-    // add a search listener mapped on adapter filter
+    /**
+     * add a search listener mapped on adapter filter
+     */
     override fun getSearchListener(): SearchView.OnQueryTextListener {
         return object : SearchView.OnQueryTextListener {
 
