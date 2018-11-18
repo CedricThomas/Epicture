@@ -545,7 +545,6 @@ object ImgurService {
         val byteArrayOutputStream = ByteArrayOutputStream()
         bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         return RequestBody.create(MediaType.parse("image/*jpg"), byteArrayOutputStream.toByteArray())
-
     }
 
     /**

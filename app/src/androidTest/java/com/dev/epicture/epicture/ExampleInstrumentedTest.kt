@@ -21,4 +21,9 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.dev.epicture.epicture", appContext.packageName)
     }
+
+    @Test
+    fun testAndroid() {
+
+    }
 }
